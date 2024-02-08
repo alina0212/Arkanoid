@@ -2,7 +2,7 @@ import pygame
 
 class Paddle():
 
-    def __init__(self, screen):
+   c
         self.screen = screen
         self.image = pygame.image.load('image/pixil-frame-0.png')
         self.rect = self.image.get_rect()
