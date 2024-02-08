@@ -2,7 +2,10 @@ import pygame
 
 class Paddle():
 
-   c
+    def __init__(self):
+        pass
+
+    def __init__(self, screen):
         self.screen = screen
         self.image = pygame.image.load('image/paddle2.png')
         self.rect = self.image.get_rect()
