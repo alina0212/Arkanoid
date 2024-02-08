@@ -2,7 +2,7 @@ import pygame
 
 
 class Player():
-    def __init__(self, screen):
+    def __init__(self):
         self.score = None
         self.time = None
 

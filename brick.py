@@ -1,11 +1,12 @@
 import pygame
 
+
 class Brick():
     def __init__(self, screen):
         self.screen = screen
         self.image = None
         self.strenght = None
-
+        self.coordinate = None
         pass
 
     def draw(self):
@@ -19,5 +20,6 @@ class Brick():
 
     def coordinateX(self):
         pass
+
     def coordinateY(self):
         pass
