@@ -1,6 +1,7 @@
 # This is a sample Python script.
 import sys
 import pygame
+from paddle import Paddle
 
 
 # Press Shift+F10 to execute it or replace it with your code.
@@ -13,12 +14,15 @@ def run():
     pygame.display.set_caption("Arkanoid")
     background_image = pygame.image.load('image/font.png')
 
+    paddle = Paddle(screen)
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
 
         screen.blit(background_image, (0, 0))
+        paddle.draw()
         pygame.display.flip()
 
 
