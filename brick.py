@@ -3,7 +3,8 @@ import pygame
 class Brick():
     def __init__(self, screen):
         self.screen = screen
-        self.image = 0
+        self.image = None
+        self.strenght = None
 
         pass
 
