@@ -10,9 +10,9 @@ from paddle import Paddle
 
 def run():
     pygame.init()
-    screen = pygame.display.set_mode((500, 500))
+    screen = pygame.display.set_mode((800, 600))
     pygame.display.set_caption("Arkanoid")
-    background_image = pygame.image.load('image/font.png')
+    background_image = pygame.image.load('image/backgroung2.png')
 
     paddle = Paddle(screen)
 
