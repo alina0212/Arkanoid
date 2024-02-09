@@ -9,19 +9,19 @@ class Ball:
         self.coordX = coordX
         self.coordY = coordY
 
-    def getSize(self):
+    def size(self):
         pass
 
-    def getColor(self):
+    def color(self):
         pass
 
     def setSpeed(self, new_speed: int):
        pass
 
-    def getSpeed(self):
+    def speed(self):
        pass
 
-    def getCollision(self):
+    def collision(self):
         pass
 
     def checkCollisionBrick(self):

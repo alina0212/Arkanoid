@@ -9,8 +9,8 @@ class Player():
     def playGame(self):
         pass
 
-    def getScore(self):
+    def score(self):
         pass
 
-    def getTime(self):
+    def time(self):
         pass
