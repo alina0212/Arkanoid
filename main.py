@@ -21,6 +21,7 @@ def run():
             if event.type == pygame.QUIT:
                 sys.exit()
 
+        paddle.move()
         screen.blit(background_image, (0, 0))
         paddle.draw()
         pygame.display.flip()
