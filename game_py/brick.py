@@ -12,14 +12,14 @@ class Brick():
     def draw(self):
         pass
 
-    def getStrenght(self):
+    def receive_strenght(self):
         pass
 
     def breake(self):
         pass
 
-    def coordinateX(self):
+    def coordinate_x(self):
         pass
 
-    def coordinateY(self):
+    def coordinate_y(self):
         pass

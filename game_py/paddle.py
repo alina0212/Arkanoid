@@ -5,13 +5,14 @@ class Paddle():
 
     def __init__(self, screen):
         self.screen = screen
-        self.image = pygame.image.load('image/paddle2.png')
+        self.image = pygame.image.load('../image/paddle2.png')
+        self.image = pygame.transform.scale(self.image, (200, 50))
         self.rect = self.image.get_rect()
         self.screen_rect = screen.get_rect()
         self.rect.centerx = self.screen_rect.centerx
         self.rect.bottom = self.screen_rect.bottom
         self.coordinates = [0, 0]  # Початкові координати платформи
-        self.speed = 3  # Швидкість руху платформи
+        self.speed = 5  # Швидкість руху платформи
 
     def draw(self):
         self.screen.blit(self.image, self.rect)

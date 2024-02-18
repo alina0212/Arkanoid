@@ -6,7 +6,7 @@ class Player():
         self.score = None
         self.time = None
 
-    def playGame(self):
+    def play_game(self):
         pass
 
     def score(self):
