@@ -12,7 +12,7 @@ class Paddle():
         self.rect.centerx = self.screen_rect.centerx
         self.rect.bottom = self.screen_rect.bottom
         self.coordinates = [0, 0]  # Початкові координати платформи
-        self.speed = 5  # Швидкість руху платформи
+        self.speed = 10  # Швидкість руху платформи
 
     def draw(self):
         self.screen.blit(self.image, self.rect)

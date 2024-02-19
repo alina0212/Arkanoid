@@ -37,13 +37,15 @@ from ball import Ball
 # run()
 
 class GameWindow:
+    def __init__(self, difficulty):
+        self.difficulty = difficulty
     def run(self):
         screen = pygame.display.set_mode((800, 600))
         pygame.display.set_caption("Arkanoid")
         background_image = pygame.image.load('../image/backgroung2.png')
 
         paddle = Paddle(screen)
-        ball = Ball(screen, paddle)
+        ball = Ball(screen, paddle, self.difficulty)
 
         clock = pygame.time.Clock()
 
@@ -65,6 +67,9 @@ class GameWindow:
             pygame.display.flip()
             clock.tick(60)
 
+
+
+
 class Button:
     def __init__(self, screen, x, y, width, height, text, color, action=None):
         self.screen = screen
@@ -82,8 +87,10 @@ class Button:
 
     def is_clicked(self):
         mouse_pos = pygame.mouse.get_pos()
-        return self.rect.collidepoint(mouse_pos)
-
+        clicked = self.rect.collidepoint(mouse_pos)
+        if clicked:
+            self.color = (156, 246, 231)
+        return clicked
 
 
 class Game:
@@ -100,9 +107,20 @@ class Game:
                 if event.type == pygame.QUIT:
                     running = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    # перехід у вікно гри
+                    if difficult1_button.is_clicked():
+                        game_window = GameWindow(difficulty=1)
+
+                    elif difficult2_button.is_clicked():
+                        game_window = GameWindow(difficulty=2)
+
+                    elif difficult3_button.is_clicked():
+                        game_window = GameWindow(difficulty=3)
+
                     if start_button.is_clicked():
                         game_window.run()
+                    # перехід у вікно гри
+                    # if start_button.is_clicked():
+                    #     game_window.run()
                     # перехід у вікно результатів
                     elif results_button.is_clicked():
                         ... # results_window.run()
@@ -121,6 +139,7 @@ class Game:
         # При виході з циклу гри виходимо з програми
         pygame.quit()
 
+
 class StartWindow:
     def run(self):
         start_button.rect.topleft = (300, 200)
@@ -128,27 +147,24 @@ class StartWindow:
         game.screen.fill((255, 255, 255))
         start_button.draw()
         results_button.draw()
+        difficult1_button.draw()
+        difficult2_button.draw()
+        difficult3_button.draw()
         pygame.display.flip()
+
 
 pygame.init()
 game = Game()
 start_button = Button(game.screen, 300, 200, 200, 50, "Start", (0, 255, 0))
-results_button = Button(game.screen, 300, 300, 200, 50, "Results", (0, 255, 0))
+results_button = Button(game.screen, 295, 300, 210, 50, "History of results", (0, 255, 0))
 
-
-difficult1_button = Button(game.screen,160, 400, 140, 50, "Easy", (0, 255, 0))
-difficult2_button = Button(game.screen,330, 400, 140, 50, "Medium", (0, 255, 0))
-difficult3_button = Button(game.screen,500, 400, 140, 50, "Hard", (0, 255, 0))
-
+difficult1_button = Button(game.screen, 160, 400, 140, 50, "Easy", (0, 255, 0))
+difficult2_button = Button(game.screen, 330, 400, 140, 50, "Medium", (0, 255, 0))
+difficult3_button = Button(game.screen, 500, 400, 140, 50, "Hard", (0, 255, 0))
 
 start_window = StartWindow()
-game_window = GameWindow()
+
 # results_window = ResultsWindow()
 # end_window = EndWindow()
 
 game.run()
-
-
-
-
-
