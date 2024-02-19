@@ -74,7 +74,7 @@ class Button:
         self.action = action
 
     def draw(self):
-        pygame.draw.rect(self.screen, self.color, self.rect)
+        pygame.draw.rect(self.screen, self.color, self.rect, border_radius=10)
         font = pygame.font.SysFont(None, 36)
         text = font.render(self.text, True, (0, 0, 0))
         text_rect = text.get_rect(center=self.rect.center)
@@ -83,6 +83,8 @@ class Button:
     def is_clicked(self):
         mouse_pos = pygame.mouse.get_pos()
         return self.rect.collidepoint(mouse_pos)
+
+
 
 class Game:
     def __init__(self):
@@ -111,6 +113,9 @@ class Game:
             self.screen.fill((255, 255, 255))
             start_button.draw()
             results_button.draw()
+            difficult1_button.draw()
+            difficult2_button.draw()
+            difficult3_button.draw()
             pygame.display.flip()
 
         # При виході з циклу гри виходимо з програми
@@ -129,11 +134,12 @@ pygame.init()
 game = Game()
 start_button = Button(game.screen, 300, 200, 200, 50, "Start", (0, 255, 0))
 results_button = Button(game.screen, 300, 300, 200, 50, "Results", (0, 255, 0))
-difficulty_buttons = [
-    Button(game.screen,0, 0, 140, 50, "Easy", (0, 255, 0)),
-    Button(game.screen,0, 0, 140, 50, "Medium", (0, 255, 0)),
-    Button(game.screen,0, 0, 140, 50, "Hard", (0, 255, 0))
-]
+
+
+difficult1_button = Button(game.screen,160, 400, 140, 50, "Easy", (0, 255, 0))
+difficult2_button = Button(game.screen,330, 400, 140, 50, "Medium", (0, 255, 0))
+difficult3_button = Button(game.screen,500, 400, 140, 50, "Hard", (0, 255, 0))
+
 
 start_window = StartWindow()
 game_window = GameWindow()
