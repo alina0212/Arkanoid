@@ -1,44 +1,11 @@
-# import sys
 import pygame
 import time
-from random import randint as rnd
 
 from brick import Brick
 # from game_py.brick import Brick
 from paddle import Paddle
 from ball import Ball
 
-
-# def run():
-#     pygame.init()
-#     screen = pygame.display.set_mode((800, 600))
-#     pygame.display.set_caption("Arkanoid")
-#     background_image = pygame.image.load('../image/backgroung2.png')
-#
-#     paddle = Paddle(screen)
-#     ball = Ball(screen, paddle)
-#
-#     clock = pygame.time.Clock()
-#
-#     while True:
-#         for event in pygame.event.get():
-#             if event.type == pygame.QUIT:
-#                 sys.exit()
-#             if event.type == pygame.KEYDOWN:
-#                 if (event.key == pygame.K_LSHIFT or
-#                         event.key == pygame.K_RSHIFT):
-#                     ball.start_move()
-#
-#         paddle.move()
-#         ball.move()
-#         ball.collision()
-#         screen.blit(background_image, (0, 0))
-#         paddle.draw()
-#         ball.draw_ball()
-#         pygame.display.flip()
-#         clock.tick(60)
-#
-# run()
 
 class GameWindow:
     def __init__(self, difficulty):
@@ -105,16 +72,9 @@ class Button:
         text_rect = text.get_rect(center=self.rect.center)
         self.screen.blit(text, text_rect)
 
-    # def is_clicked(self):
-    #     mouse_pos = pygame.mouse.get_pos()
-    #     clicked = self.rect.collidepoint(mouse_pos)
-    #     if clicked:
-    #         self.color = (245, 255, 230)
-    #     return clicked
-
     def update(self):
         if time.time() - self.last_click_time < self.click_duration:
-            self.color = (245, 255, 230)  # новий колір, який ви хочете встановити
+            self.color = (245, 255, 230)
         else:
             self.color = self.default_color
 
@@ -122,8 +82,9 @@ class Button:
         mouse_pos = pygame.mouse.get_pos()
         clicked = self.rect.collidepoint(mouse_pos)
         if clicked:
-            self.last_click_time = time.time()  # оновити час останнього натискання
+            self.last_click_time = time.time()
         return clicked
+
 
 class Game:
     def __init__(self):

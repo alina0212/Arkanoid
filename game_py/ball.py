@@ -1,5 +1,4 @@
 import pygame
-from random import randrange as rnd
 
 
 class Ball:
@@ -21,19 +20,10 @@ class Ball:
         self.ball_rect = self.initial_position()
 
     def start_move(self):
-        # if self.dx == 0 and self.dy == 0:
-        #     self.dx = 1
-        #     self.dy = -1
-        #     self.speed = self.receive_speed()
-        # if self.dx == 0 and self.dy == 0:
-        #     self.dx = 1 if rnd(0, 1) == 0 else -1  # Випадково визначаємо напрямок м'яча
-        #     self.dy = -1
-        #     self.speed = self.receive_speed()
         if self.dx == 0 and self.dy == 0:
             self.dx = 0
             self.dy = -1
             self.speed = self.receive_speed()
-
 
     def size(self, radius):
         if radius > 0:
