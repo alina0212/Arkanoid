@@ -1,5 +1,6 @@
 # import sys
 import pygame
+import time
 from random import randint as rnd
 
 from brick import Brick
@@ -87,26 +88,42 @@ class GameWindow:
 
 class Button:
     def __init__(self, screen, x, y, width, height, text, color, action=None):
+        self.default_color = color
         self.screen = screen
         self.rect = pygame.Rect(x, y, width, height)
         self.text = text
         self.color = color
         self.action = action
+        self.last_click_time = 0
+        self.click_duration = 0.5
 
     def draw(self):
+        self.update()
         pygame.draw.rect(self.screen, self.color, self.rect, border_radius=30)
         font = pygame.font.SysFont(None, 32)
         text = font.render(self.text, True, (32, 33, 33))
         text_rect = text.get_rect(center=self.rect.center)
         self.screen.blit(text, text_rect)
 
+    # def is_clicked(self):
+    #     mouse_pos = pygame.mouse.get_pos()
+    #     clicked = self.rect.collidepoint(mouse_pos)
+    #     if clicked:
+    #         self.color = (245, 255, 230)
+    #     return clicked
+
+    def update(self):
+        if time.time() - self.last_click_time < self.click_duration:
+            self.color = (245, 255, 230)  # новий колір, який ви хочете встановити
+        else:
+            self.color = self.default_color
+
     def is_clicked(self):
         mouse_pos = pygame.mouse.get_pos()
         clicked = self.rect.collidepoint(mouse_pos)
         if clicked:
-            self.color = (245, 255, 230)
+            self.last_click_time = time.time()  # оновити час останнього натискання
         return clicked
-
 
 class Game:
     def __init__(self):
