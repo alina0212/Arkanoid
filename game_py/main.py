@@ -1,6 +1,9 @@
-import sys
+# import sys
 import pygame
+from random import randint as rnd
 
+from brick import Brick
+# from game_py.brick import Brick
 from paddle import Paddle
 from ball import Ball
 
@@ -39,6 +42,7 @@ from ball import Ball
 class GameWindow:
     def __init__(self, difficulty):
         self.difficulty = difficulty
+
     def run(self):
         screen = pygame.display.set_mode((800, 600))
         pygame.display.set_caption("Arkanoid")
@@ -46,7 +50,17 @@ class GameWindow:
 
         paddle = Paddle(screen)
         ball = Ball(screen, paddle, self.difficulty)
+        # Створення списку блоків
+        block_list = [pygame.Rect(10 + 90 * i, 10 + 70 * j, 60, 50) for i in range(10) for j in range(4)]
 
+        # Створення групи спрайтів для блоків
+        block_sprites = pygame.sprite.Group()
+        for block_rect in block_list:
+            x, y, width, height = block_rect
+            block = Brick(x, y, width, height, (255, 192, 203))  # Рожевий колір
+            block_sprites.add(block)
+
+        block_sprites.draw(screen)
         clock = pygame.time.Clock()
 
         while True:
@@ -59,15 +73,16 @@ class GameWindow:
                         ball.start_move()
 
             paddle.move()
+
             ball.move()
             ball.collision()
             screen.blit(background_image, (0, 0))
+            block_sprites.draw(screen)
+
             paddle.draw()
             ball.draw_ball()
             pygame.display.flip()
             clock.tick(60)
-
-
 
 
 class Button:
@@ -123,7 +138,7 @@ class Game:
                     #     game_window.run()
                     # перехід у вікно результатів
                     elif results_button.is_clicked():
-                        ... # results_window.run()
+                        ...  # results_window.run()
                     # перехід у вікно старт з вікна кінець
                     # elif end_button.is_clicked():
                     #     start_window.run()

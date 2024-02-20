@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 
+
 class Paddle():
 
     def __init__(self, screen):
@@ -31,5 +32,5 @@ class Paddle():
         if self.rect.right > self.screen_rect.right:
             self.rect.right = self.screen_rect.right
 
-    def get_coordinates(self):
+    def receive_coordinates(self):
         return self.rect.centerx, self.rect.bottom
