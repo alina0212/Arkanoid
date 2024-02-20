@@ -51,13 +51,13 @@ class GameWindow:
         paddle = Paddle(screen)
         ball = Ball(screen, paddle, self.difficulty)
         # Створення списку блоків
-        block_list = [pygame.Rect(10 + 90 * i, 10 + 70 * j, 60, 50) for i in range(10) for j in range(4)]
+        block_list = [pygame.Rect(20 + 110 * i, 20 + 50 * j, 100, 40) for i in range(7) for j in range(4)]
 
         # Створення групи спрайтів для блоків
         block_sprites = pygame.sprite.Group()
         for block_rect in block_list:
             x, y, width, height = block_rect
-            block = Brick(x, y, width, height, (255, 192, 203))  # Рожевий колір
+            block = Brick(x, y, width, height, (182, 54, 36))  # Рожевий колір
             block_sprites.add(block)
 
         block_sprites.draw(screen)
@@ -94,9 +94,9 @@ class Button:
         self.action = action
 
     def draw(self):
-        pygame.draw.rect(self.screen, self.color, self.rect, border_radius=10)
-        font = pygame.font.SysFont(None, 36)
-        text = font.render(self.text, True, (0, 0, 0))
+        pygame.draw.rect(self.screen, self.color, self.rect, border_radius=30)
+        font = pygame.font.SysFont(None, 32)
+        text = font.render(self.text, True, (32, 33, 33))
         text_rect = text.get_rect(center=self.rect.center)
         self.screen.blit(text, text_rect)
 
@@ -143,7 +143,10 @@ class Game:
                     # elif end_button.is_clicked():
                     #     start_window.run()
 
-            self.screen.fill((255, 255, 255))
+            self.screen.fill((26, 45, 115))
+            background_image_start = pygame.image.load('../image/ARKANOID.png')
+            resized_image = pygame.transform.scale(background_image_start , (700, 200))
+            game.screen.blit(resized_image , (55, 0))
             start_button.draw()
             results_button.draw()
             difficult1_button.draw()
@@ -159,7 +162,7 @@ class StartWindow:
     def run(self):
         start_button.rect.topleft = (300, 200)
         results_button.rect.topleft = (300, 300)
-        game.screen.fill((255, 255, 255))
+        #game.screen.fill((26, 45, 115))
         start_button.draw()
         results_button.draw()
         difficult1_button.draw()
@@ -170,12 +173,12 @@ class StartWindow:
 
 pygame.init()
 game = Game()
-start_button = Button(game.screen, 300, 200, 200, 50, "Start", (0, 255, 0))
-results_button = Button(game.screen, 295, 300, 210, 50, "History of results", (0, 255, 0))
+start_button = Button(game.screen, 300, 200, 200, 50, "Start", (240, 133, 245))
+results_button = Button(game.screen, 295, 300, 210, 50, "History of results", (240, 133, 245))
 
-difficult1_button = Button(game.screen, 160, 400, 140, 50, "Easy", (0, 255, 0))
-difficult2_button = Button(game.screen, 330, 400, 140, 50, "Medium", (0, 255, 0))
-difficult3_button = Button(game.screen, 500, 400, 140, 50, "Hard", (0, 255, 0))
+difficult1_button = Button(game.screen, 160, 400, 140, 50, "Easy", (46, 224, 155))
+difficult2_button = Button(game.screen, 330, 400, 140, 50, "Medium", (46, 224, 155))
+difficult3_button = Button(game.screen, 500, 400, 140, 50, "Hard", (46, 224, 155))
 
 start_window = StartWindow()
 
