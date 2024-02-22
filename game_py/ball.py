@@ -18,7 +18,7 @@ class Ball:
         self.dx = 0
         self.dy = 0
         self.speed = self.receive_speed()
-        self.color = "white"
+        self.color = "black"
         self.ball_rect = self.initial_position()
         self.rect = pygame.Rect(self.ball_rect)
         self.blocks_hit = 0  # Додано для відстеження кількості блоків, які гравець вдарив

@@ -16,7 +16,7 @@ class GameWindow:
         background_image = pygame.image.load('../image/backgroung2.png')
 
         brick_container = BrickContainer(screen)
-        block_list = brick_container.generate_block_list((182, 54, 36))
+        block_list = brick_container.generate_block_list((153, 99, 241))
         block_sprites = pygame.sprite.Group(block_list)
         paddle = Paddle(screen)
         ball = Ball(screen, paddle, block_sprites, self.difficulty)
@@ -177,7 +177,7 @@ class Game:
         running = True
         game_window = None
         while running:
-            self.screen.fill((26, 45, 115))
+            self.screen.fill((111, 128, 217))
             background_image_start = pygame.image.load('../image/ARKANOID.png')
             resized_image = pygame.transform.scale(background_image_start, (700, 200))
             game.screen.blit(resized_image, (55, 0))
