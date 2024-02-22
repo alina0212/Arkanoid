@@ -2,7 +2,6 @@ import pygame
 import time
 
 from brick import BrickContainer
-# from game_py.brick import Brick
 from paddle import Paddle
 from ball import Ball
 
@@ -53,20 +52,22 @@ class GameWindow:
 
 class ResultWindow:
     def __init__(self):  # , time_spent, blocks_broken
-        self.time_spent = 10  # time_spent
+        self.time_spent = None# time_spent
         self.blocks_broken = 5  # blocks_broken
         self.font = pygame.font.SysFont(None, 50)
         self.screen_result = pygame.display.set_mode((800, 600))
         self.width = self.screen_result.get_width()
         self.height = self.screen_result.get_height()
         self.game_over_text = self.font.render("Game Over", True, (0, 0, 0))
-        self.time_text = self.font.render("Time Spent: " + str(round(self.time_spent, 2)), True, (0, 0, 0))
         self.blocks_text = self.font.render("Blocks Broken: " + str(self.blocks_broken), True, (0, 0, 0))
+        self.time_text = None
 
     def run(self):
         pygame.display.set_caption("Result")
         clock = pygame.time.Clock()
         self.screen_result.fill((162, 255, 240))
+        self.time_spent = round(time.time() - game.start_time, 2)  # Обчислюємо час гри
+        self.time_text = self.font.render("Time Spent: " + str(round(self.time_spent, 2)), True, (0, 0, 0))
 
         running = True
         while running:
@@ -169,6 +170,7 @@ class Game:
         self.height = 600
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("Game")
+        self.start_time = 0  # Додайте змінну для часу початку гри
 
     def run(self):
         running = True
@@ -195,6 +197,7 @@ class Game:
 
                     # перехід у вікно гри
                     if start_button.is_clicked():
+                        self.start_time = time.time()  # Запам'ятовуємо час початку гри
                         if game_window is not None:
                             game_window.run()
 
