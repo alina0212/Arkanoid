@@ -39,7 +39,7 @@ class GameWindow:
 
             # м'яч доторкнувся нижньої межі екрану або розбиті всі блоки, гра завершена
             if ball.check_collision_bottom() or ball.all_bricks_broken():
-                result_window.run()
+                result_window.run(ball.blocks_hit)  # Передаємо кількість вдарених блоків у вікно результатів гри
                 return
 
             screen.blit(background_image, (0, 0))
@@ -53,21 +53,22 @@ class GameWindow:
 class ResultWindow:
     def __init__(self):  # , time_spent, blocks_broken
         self.time_spent = None# time_spent
-        self.blocks_broken = 5  # blocks_broken
+        self.blocks_hit = None # blocks_broken
         self.font = pygame.font.SysFont(None, 50)
         self.screen_result = pygame.display.set_mode((800, 600))
         self.width = self.screen_result.get_width()
         self.height = self.screen_result.get_height()
         self.game_over_text = self.font.render("Game Over", True, (0, 0, 0))
-        self.blocks_text = self.font.render("Blocks Broken: " + str(self.blocks_broken), True, (0, 0, 0))
         self.time_text = None
+        self.blocks_text = None
 
-    def run(self):
+    def run(self, blocks_hit):
         pygame.display.set_caption("Result")
         clock = pygame.time.Clock()
         self.screen_result.fill((162, 255, 240))
         self.time_spent = round(time.time() - game.start_time, 2)  # Обчислюємо час гри
         self.time_text = self.font.render("Time Spent: " + str(round(self.time_spent, 2)), True, (0, 0, 0))
+        self.blocks_text = self.font.render("Blocks Broken: " + str(blocks_hit), True, (0, 0, 0))
 
         running = True
         while running:

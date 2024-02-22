@@ -21,6 +21,8 @@ class Ball:
         self.color = "white"
         self.ball_rect = self.initial_position()
         self.rect = pygame.Rect(self.ball_rect)
+        self.blocks_hit = 0  # Додано для відстеження кількості блоків, які гравець вдарив
+
 
     # малюємо м'яч
     def draw_ball(self):
@@ -84,6 +86,7 @@ class Ball:
     def check_collision_brick(self):
         hits = pygame.sprite.spritecollide(self, self.brick_sprites, True)
         for hit in hits:
+            self.blocks_hit += 1  # Додано для відстеження кількості блоків, які гравець вдарив
             if self.dx > 0:  # якщо м'яч рухався вправо, змінюємо напрямок наліво
                 self.dx = -self.dx
             elif self.dx < 0:  # якщо м'яч рухався вліво, змінюємо напрямок направо
