@@ -15,31 +15,12 @@ class GameWindow:
         screen = pygame.display.set_mode((800, 600))
         pygame.display.set_caption("Arkanoid")
         background_image = pygame.image.load('../image/backgroung2.png')
-        paddle = Paddle(screen)
-        ball = Ball(screen, paddle, self.difficulty)
-
-        # # Створення списку блоків
-        # block_list = [pygame.Rect(20 + 110 * i, 20 + 50 * j, 100, 40) for i in range(7) for j in range(4)]
-        #
-        # # Створення групи спрайтів для блоків
-        # block_sprites = pygame.sprite.Group()
-        # for block_rect in block_list:
-        #     x, y, width, height = block_rect
-        #     block = Brick(x, y, width, height, (182, 54, 36))  # Рожевий колір
-        #     block_sprites.add(block)
-        #
-        # block_sprites.draw(screen)
-        # Створюємо екземпляр класу Brick
-        # brick = Brick(0, 0, screen, (245, 109, 82))
-        # Генеруємо список блоків
-        # block_list = brick.generate_block_list()
-        # Створення групи спрайтів для блоків
-        # block_sprites = pygame.sprite.Group()
-        # block_sprites.add(*block_list)
 
         brick_container = BrickContainer(screen)
         block_list = brick_container.generate_block_list((182, 54, 36))
         block_sprites = pygame.sprite.Group(block_list)
+        paddle = Paddle(screen)
+        ball = Ball(screen, paddle, block_sprites, self.difficulty)
 
         clock = pygame.time.Clock()
 
@@ -56,10 +37,10 @@ class GameWindow:
 
             ball.move()
             ball.collision()
-
-            if ball.check_collision_bottom():
+            ball.check_collision_brick()
+            # М'яч доторкнувся нижньої межі екрануабо розбиті всі блоки, гра завершена
+            if ball.check_collision_bottom() or ball.all_bricks_broken():
                 result_window.run()
-                # М'яч доторкнувся нижньої межі екрану, гра завершена
                 return
 
             screen.blit(background_image, (0, 0))
@@ -74,7 +55,7 @@ class ResultWindow:
     def __init__(self): #, time_spent, blocks_broken
         self.time_spent = 10 #time_spent
         self.blocks_broken = 5 #blocks_broken
-        self.font = pygame.font.SysFont(None, 24)
+        self.font = pygame.font.SysFont(None, 50)
         self.screen_result = pygame.display.set_mode((800, 600))
         self.width = self.screen_result.get_width()
         self.height = self.screen_result.get_height()
@@ -117,7 +98,7 @@ class Button:
         self.color = color
         self.action = action
         self.last_click_time = 0
-        self.click_duration = 0.5
+        self.click_duration = 0.25
 
     def draw(self):
         self.update()
@@ -149,6 +130,7 @@ class Game:
         pygame.display.set_caption("Game")
 
     def run(self):
+        self.screen.fill((26, 45, 115))
         running = True
         game_window = None
         while running:
@@ -174,7 +156,6 @@ class Game:
                     elif history_results_button.is_clicked():
                         history_results_window.run()
 
-            self.screen.fill((26, 45, 115))
             background_image_start = pygame.image.load('../image/ARKANOID.png')
             resized_image = pygame.transform.scale(background_image_start, (700, 200))
             game.screen.blit(resized_image, (55, 0))
@@ -244,3 +225,23 @@ history_results_window = HistoryResultsWindow()
 result_window = ResultWindow()
 
 game.run()
+
+
+# # Створення списку блоків
+        # block_list = [pygame.Rect(20 + 110 * i, 20 + 50 * j, 100, 40) for i in range(7) for j in range(4)]
+        #
+        # # Створення групи спрайтів для блоків
+        # block_sprites = pygame.sprite.Group()
+        # for block_rect in block_list:
+        #     x, y, width, height = block_rect
+        #     block = Brick(x, y, width, height, (182, 54, 36))  # Рожевий колір
+        #     block_sprites.add(block)
+        #
+        # block_sprites.draw(screen)
+        # Створюємо екземпляр класу Brick
+        # brick = Brick(0, 0, screen, (245, 109, 82))
+        # Генеруємо список блоків
+        # block_list = brick.generate_block_list()
+        # Створення групи спрайтів для блоків
+        # block_sprites = pygame.sprite.Group()
+        # block_sprites.add(*block_list)
