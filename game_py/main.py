@@ -128,7 +128,6 @@ class Game:
         pygame.display.set_caption("Game")
 
     def run(self):
-
         running = True
         game_window = None
         while running:
@@ -225,21 +224,3 @@ result_window = ResultWindow()
 
 game.run()
 
-# # Створення списку блоків
-# block_list = [pygame.Rect(20 + 110 * i, 20 + 50 * j, 100, 40) for i in range(7) for j in range(4)]
-#
-# # Створення групи спрайтів для блоків
-# block_sprites = pygame.sprite.Group()
-# for block_rect in block_list:
-#     x, y, width, height = block_rect
-#     block = Brick(x, y, width, height, (182, 54, 36))  # Рожевий колір
-#     block_sprites.add(block)
-#
-# block_sprites.draw(screen)
-# Створюємо екземпляр класу Brick
-# brick = Brick(0, 0, screen, (245, 109, 82))
-# Генеруємо список блоків
-# block_list = brick.generate_block_list()
-# Створення групи спрайтів для блоків
-# block_sprites = pygame.sprite.Group()
-# block_sprites.add(*block_list)
