@@ -70,6 +70,11 @@ class Ball:
     def check_collision_brick(self):
         pass
 
+    def check_collision_bottom(self):
+        if self.ball_rect.bottom >= self.height:
+            return True
+        return False
+
     def move(self):
         self.ball_rect.x += self.speed * self.dx
         self.ball_rect.y += self.speed * self.dy

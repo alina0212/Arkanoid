@@ -18,7 +18,6 @@ class GameWindow:
         paddle = Paddle(screen)
         ball = Ball(screen, paddle, self.difficulty)
 
-
         # # Створення списку блоків
         # block_list = [pygame.Rect(20 + 110 * i, 20 + 50 * j, 100, 40) for i in range(7) for j in range(4)]
         #
@@ -31,16 +30,16 @@ class GameWindow:
         #
         # block_sprites.draw(screen)
         # Створюємо екземпляр класу Brick
-        #brick = Brick(0, 0, screen, (245, 109, 82))
+        # brick = Brick(0, 0, screen, (245, 109, 82))
         # Генеруємо список блоків
-        #block_list = brick.generate_block_list()
+        # block_list = brick.generate_block_list()
         # Створення групи спрайтів для блоків
-        #block_sprites = pygame.sprite.Group()
-        #block_sprites.add(*block_list)
+        # block_sprites = pygame.sprite.Group()
+        # block_sprites.add(*block_list)
+
         brick_container = BrickContainer(screen)
         block_list = brick_container.generate_block_list((182, 54, 36))
         block_sprites = pygame.sprite.Group(block_list)
-
 
         clock = pygame.time.Clock()
 
@@ -57,12 +56,56 @@ class GameWindow:
 
             ball.move()
             ball.collision()
+
+            if ball.check_collision_bottom():
+                result_window.run()
+                # М'яч доторкнувся нижньої межі екрану, гра завершена
+                return
+
             screen.blit(background_image, (0, 0))
             block_sprites.draw(screen)
             paddle.draw()
             ball.draw_ball()
             pygame.display.flip()
             clock.tick(60)
+
+
+class ResultWindow:
+    def __init__(self): #, time_spent, blocks_broken
+        self.time_spent = 10 #time_spent
+        self.blocks_broken = 5 #blocks_broken
+        self.font = pygame.font.SysFont(None, 24)
+        self.screen_result = pygame.display.set_mode((800, 600))
+        self.width = self.screen_result.get_width()
+        self.height = self.screen_result.get_height()
+        self.game_over_text = self.font.render("Game Over", True, (0, 0, 0))
+        self.time_text = self.font.render("Time Spent: " + str(round(self.time_spent, 2)), True, (0, 0, 0))
+        self.blocks_text = self.font.render("Blocks Broken: " + str(self.blocks_broken), True, (0, 0, 0))
+
+    def run(self):
+        pygame.display.set_caption("Result")
+        clock = pygame.time.Clock()
+        self.screen_result.fill((162, 255, 240))
+
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if back_menu_button.is_clicked():
+                        running = False
+
+            self.screen_result.blit(self.game_over_text, (self.width // 2 - self.game_over_text.get_width() // 2, 200))
+            self.screen_result.blit(self.time_text, (self.width // 2 - self.time_text.get_width() // 2, 300))
+            self.screen_result.blit(self.blocks_text, (self.width // 2 - self.blocks_text.get_width() // 2, 400))
+
+            back_menu_button.draw()
+            pygame.display.flip()
+            clock.tick(60)
+
+
 
 
 class Button:
@@ -151,12 +194,10 @@ class HistoryResultsWindow:
         self.results = []
 
     def run(self):
-        screen_history = pygame.display.set_mode((800, 600))
-
         pygame.display.set_caption("History of results")
-        result_label_font = pygame.font.SysFont(None, 24)
+        screen_history = pygame.display.set_mode((800, 600))
         screen_history.fill((162, 255, 240))
-
+        result_label_font = pygame.font.SysFont(None, 24)
         clock = pygame.time.Clock()
 
         running = True
@@ -168,7 +209,6 @@ class HistoryResultsWindow:
                     if back_menu_button.is_clicked():
                         running = False
 
-            screen_history.fill((162, 255, 240))
             self.display_results(screen_history, result_label_font)
             back_menu_button.draw()
             pygame.display.flip()
@@ -188,19 +228,6 @@ class HistoryResultsWindow:
             screen_history.blit(result_surface, (10, 40 + i * 20))
 
 
-# class StartWindow:
-#     def run(self):
-#         start_button.rect.topleft = (300, 200)
-#         history_results_button.rect.topleft = (300, 300)
-#         #game.screen.fill((26, 45, 115))
-#         start_button.draw()
-#         history_results_button.draw()
-#         difficult1_button.draw()
-#         difficult2_button.draw()
-#         difficult3_button.draw()
-#         pygame.display.flip()
-
-
 pygame.init()
 game = Game()
 start_button = Button(game.screen, 300, 200, 200, 50, "Start", (240, 133, 245))
@@ -214,7 +241,6 @@ back_menu_button = Button(game.screen, 5, 5, 140, 50, "Menu", (240, 133, 245))
 
 history_results_window = HistoryResultsWindow()
 
-# start_window = StartWindow()
-# end_window = EndWindow()
+result_window = ResultWindow()
 
 game.run()
