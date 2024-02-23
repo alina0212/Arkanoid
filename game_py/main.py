@@ -86,7 +86,7 @@ class ResultWindow:
 
             back_menu_button.draw()
             pygame.display.flip()
-            clock.tick(60)
+            clock.tick(60)  # Обмежуємо швидкість кадрів до 60 кадрів на секунд
 
 
 class HistoryResultsWindow:
@@ -125,9 +125,9 @@ class HistoryResultsWindow:
         screen_history.blit(label_surface, (10, 10))
 
         for i, result in enumerate(self.results):
-            result_text = f"Result #{i + 1}: Time Spent: {result[0]}, Blocks Broken: {result[1]}"
-            result_surface = result_label_font.render(result_text, True, (255, 255, 255))
-            screen_history.blit(result_surface, (10, 40 + i * 20))
+            result_text = f"Result #{i + 1}: Time Spent: {result[0]}, Blocks Broken: {result[1]}"   # Формуємо текст результату
+            result_surface = result_label_font.render(result_text, True, (255, 255, 255))     # Створюємо поверхню з текстом результату
+            screen_history.blit(result_surface, (10, 40 + i * 20))  # Відображаємо текст результату на вікні
 
 
 class Button:

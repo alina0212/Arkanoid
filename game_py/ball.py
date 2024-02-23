@@ -6,7 +6,7 @@ class Ball:
     def __init__(self, screen, paddle, brick_sprites, difficulty):
         self.screen = screen
         self.paddle = paddle
-        self.brick_sprites = brick_sprites
+        self.brick_sprites = brick_sprites  # Група блоків
         self.difficulty = difficulty
         self.speed = None
         self.ball_radius = 10
@@ -20,7 +20,7 @@ class Ball:
         self.speed = self.receive_speed()
         self.color = "black"
         self.ball_rect = self.initial_position()
-        self.rect = pygame.Rect(self.ball_rect)
+        self.rect = pygame.Rect(self.ball_rect) # Створення прямокутника, що обмежує м'яч
         self.blocks_hit = 0  # Додано для відстеження кількості блоків, які гравець вдарив
 
 
