@@ -50,7 +50,7 @@ class GameWindow:
             paddle.draw()
             ball.draw_ball()
             pygame.display.flip()
-            clock.tick(60)
+            clock.tick(120)
 
 
 class ResultWindow:
@@ -67,7 +67,6 @@ class ResultWindow:
 
     def run(self, blocks_hit):
         pygame.display.set_caption("Result")
-        clock = pygame.time.Clock()
         self.screen_result.fill((162, 255, 240))
         self.time_spent = round(time.time() - game.start_time, 2)  # Обчислюємо час гри
         self.time_text = self.font.render("Time Spent: " + str(round(self.time_spent, 2)), True, (0, 0, 0))
@@ -89,7 +88,6 @@ class ResultWindow:
 
             back_menu_button.draw()
             pygame.display.flip()
-            clock.tick(60)  # Обмежуємо швидкість кадрів до 60 кадрів на секунд
 
 
 class HistoryResultsWindow:
@@ -101,7 +99,6 @@ class HistoryResultsWindow:
         screen_history = pygame.display.set_mode((800, 600))
         screen_history.fill((162, 255, 240))
         result_label_font = pygame.font.SysFont(None, 24)
-        clock = pygame.time.Clock()
 
         running = True
         while running:
@@ -115,7 +112,6 @@ class HistoryResultsWindow:
             self.display_results(screen_history, result_label_font)
             back_menu_button.draw()
             pygame.display.flip()
-            clock.tick(60)
 
     # додаємо результати
     def add_result(self, time_spent, blocks_broken):
@@ -215,7 +211,6 @@ class Game:
                     # перехід у вікно історії результатів
                     elif history_results_button.is_clicked():
                         history_results_window.run()
-
 
             pygame.display.flip()
 
