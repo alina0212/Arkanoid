@@ -181,7 +181,9 @@ class Game:
         game_window = None
         while running:
             self.screen.fill((111, 128, 217))
-            background_image_start = pygame.image.load('../image/ARKANOID.png')
+            image_path = os.path.join("../image", "ARKANOID.png")
+            background_image_start = pygame.image.load(image_path)
+            # background_image_start = pygame.image.load('../image/ARKANOID.png')
             resized_image = pygame.transform.scale(background_image_start, (700, 200))
             game.screen.blit(resized_image, (55, 0))
             start_button.draw()
