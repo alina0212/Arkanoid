@@ -1,5 +1,6 @@
 import pygame
 import time
+import os
 
 from brick import BrickContainer
 from paddle import Paddle
@@ -13,7 +14,9 @@ class GameWindow:
     def run(self):
         screen = pygame.display.set_mode((800, 600))
         pygame.display.set_caption("Arkanoid")
-        background_image = pygame.image.load('../image/backgroung2.png')
+        image_path = os.path.join("../image", "backgroung2.png")
+        background_image = pygame.image.load(image_path)
+        # background_image = pygame.image.load('../image/backgroung2.png')
 
         brick_container = BrickContainer(screen)
         block_list = brick_container.generate_block_list((153, 99, 241))
