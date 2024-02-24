@@ -1,5 +1,6 @@
 import pygame
 import pygame.sprite
+import random
 
 
 class Ball:
@@ -43,8 +44,9 @@ class Ball:
     # визначаємо, щоб м'яч рухався вертикально
     def start_move(self):
         if self.dx == 0 and self.dy == 0:
-            self.dx = 0
-            self.dy = -1
+            # Генеруємо випадковий напрямок руху
+            self.dx = random.choice([-1, 0, 1])
+            self.dy = random.choice([-1, 1])
             self.speed = self.receive_speed()
 
     # рух м'яча

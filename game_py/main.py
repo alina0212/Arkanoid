@@ -181,6 +181,11 @@ class Game:
             background_image_start = pygame.image.load('../image/ARKANOID.png')
             resized_image = pygame.transform.scale(background_image_start, (700, 200))
             game.screen.blit(resized_image, (55, 0))
+            start_button.draw()
+            history_results_button.draw()
+            difficult1_button.draw()
+            difficult2_button.draw()
+            difficult3_button.draw()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -206,11 +211,7 @@ class Game:
                     elif history_results_button.is_clicked():
                         history_results_window.run()
 
-            start_button.draw()
-            history_results_button.draw()
-            difficult1_button.draw()
-            difficult2_button.draw()
-            difficult3_button.draw()
+
             pygame.display.flip()
 
 
