@@ -55,8 +55,9 @@ class GameWindow:
 
 class ResultWindow:
     def __init__(self):  # , time_spent, blocks_broken
-        self.time_spent = None# time_spent
-        self.blocks_hit = None # blocks_broken
+        self.background_image = None
+        self.time_spent = None  # time_spent
+        self.blocks_hit = None  # blocks_broken
         self.font = pygame.font.SysFont(None, 50)
         self.screen_result = pygame.display.set_mode((800, 600))
         self.width = self.screen_result.get_width()
@@ -64,10 +65,25 @@ class ResultWindow:
         self.game_over_text = self.font.render("Game Over", True, (0, 0, 0))
         self.time_text = None
         self.blocks_text = None
+        self.you_win_background_image_path = os.path.join("../image", "you_win_background.jpg")
 
     def run(self, blocks_hit):
         pygame.display.set_caption("Result")
         self.screen_result.fill((162, 255, 240))
+
+        # Перевіряємо, чи всі блоки розбиті
+        if blocks_hit == 0:
+            # Якщо так, встановлюємо фон на певне зображення
+            you_win_background_image_path = os.path.join("../image", "you_win_background.jpg")
+            self.background_image = pygame.image.load(you_win_background_image_path)
+            self.screen_result.blit(self.background_image, (0, 0))
+        else:
+            # Якщо ні, залишаємо фон як заданий
+            you_lost_background_image_path = os.path.join("../image", "you_lost_background.jpg")
+            self.background_image = pygame.image.load(you_lost_background_image_path)
+            self.screen_result.blit(self.background_image, (0, 0))
+
+        # Розміщуємо фонове зображення на екрані
         self.time_spent = round(time.time() - game.start_time, 2)  # Обчислюємо час гри
         self.time_text = self.font.render("Time Spent: " + str(round(self.time_spent, 2)), True, (0, 0, 0))
         self.blocks_text = self.font.render("Blocks Broken: " + str(blocks_hit), True, (0, 0, 0))
@@ -124,8 +140,9 @@ class HistoryResultsWindow:
         screen_history.blit(label_surface, (10, 10))
 
         for i, result in enumerate(self.results):
-            result_text = f"Result #{i + 1}: Time Spent: {result[0]}, Blocks Broken: {result[1]}"   # Формуємо текст результату
-            result_surface = result_label_font.render(result_text, True, (255, 255, 255))     # Створюємо поверхню з текстом результату
+            result_text = f"Result #{i + 1}: Time Spent: {result[0]}, Blocks Broken: {result[1]}"  # Формуємо текст результату
+            result_surface = result_label_font.render(result_text, True,
+                                                      (255, 255, 255))  # Створюємо поверхню з текстом результату
             screen_history.blit(result_surface, (10, 40 + i * 20))  # Відображаємо текст результату на вікні
 
 
@@ -176,11 +193,15 @@ class Game:
         running = True
         game_window = None
         while running:
-            self.screen.fill((111, 128, 217))
+            # self.screen.fill((111, 128, 217))
+            image_path_background_start = os.path.join("../image", "start_windon_background.jpg")
             image_path = os.path.join("../image", "ARKANOID.png")
+            background_image2_start = pygame.image.load(image_path_background_start)
             background_image_start = pygame.image.load(image_path)
             # background_image_start = pygame.image.load('../image/ARKANOID.png')
             resized_image = pygame.transform.scale(background_image_start, (700, 200))
+            resized_image2 = pygame.transform.scale(background_image2_start, (800, 600))
+            game.screen.blit(resized_image2, (0, 0))
             game.screen.blit(resized_image, (55, 0))
             start_button.draw()
             history_results_button.draw()
