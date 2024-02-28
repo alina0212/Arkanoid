@@ -72,8 +72,11 @@ class ResultWindow:
     def save_to_csv(self, blocks_hit, difficulty_level):  # Add difficulty_level as a parameter
         timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
         time_spent = round(time.time() - game.start_time, 2)
+        # Відкриваємо файл CSV у режимі додавання з новим рядком
         with open(self.csv_filename, mode='a', newline='') as file:
+            # Створюємо об'єкт для запису в файл CSV
             writer = csv.writer(file)
+            # Записуємо новий рядок в файл, який містить інформацію про результати гри
             writer.writerow([timestamp, difficulty_level, time_spent, blocks_hit])
 
     def run(self, blocks_hit, difficulty):
@@ -126,12 +129,12 @@ class HistoryResultsWindow:
 
     def load_results_from_csv(self):
         try:
-            with open(self.csv_filename, mode='r', newline='') as file:
+            with open(self.csv_filename, mode='r', newline='') as file:  # r  бо режим read
                 reader = csv.reader(file)
                 header = next(reader, None)  # Отримуємо заголовок
                 if header is not None:  # Перевіряємо чи є рядок
                     for row in reader:
-                        self.results.append(row)
+                        self.results.append(row) #файл CSV читається рядок за рядком, кожен рядок стає окремим елементом у списку self.results.
         except FileNotFoundError as e:
             print(f"Помилка: Файл CSV не знайдено. Деталі: {e}")
 
