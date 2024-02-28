@@ -43,8 +43,8 @@ class GameWindow:
 
             # м'яч доторкнувся нижньої межі екрану або розбиті всі блоки, гра завершена
             if ball.check_collision_bottom() or ball.all_bricks_broken():
-                result_window.run(ball.blocks_hit,
-                                  self.difficulty)  # Передаємо кількість вдарених блоків у вікно результатів гри
+                # Передаємо кількість вдарених блоків у вікно результатів гри
+                result_window.run(ball.blocks_hit, self.difficulty)
                 return
 
             screen.blit(background_image, (0, 0))
@@ -226,6 +226,12 @@ class Game:
             game.screen.blit(self.resized_image2, (0, 0))
             game.screen.blit(self.resized_image, (55, 0))
 
+            start_button.draw()
+            history_results_button.draw()
+            difficult1_button.draw()
+            difficult2_button.draw()
+            difficult3_button.draw()
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -250,11 +256,6 @@ class Game:
                     if history_results_button.is_clicked():
                         history_results_window.run()
 
-            start_button.draw()
-            history_results_button.draw()
-            difficult1_button.draw()
-            difficult2_button.draw()
-            difficult3_button.draw()
             pygame.display.flip()
             clock.tick(60)
 

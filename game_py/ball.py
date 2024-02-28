@@ -45,7 +45,7 @@ class Ball:
     def start_move(self):
         if self.dx == 0 and self.dy == 0:
             # Генеруємо випадковий напрямок руху
-            self.dx = random.choice([-1, 0, 1])
+            self.dx = 0 #random.choice([-1, 0, 1])
             self.dy = random.choice([-1, 1])
             self.speed = self.receive_speed()
             return self.dx, self.dy, self.speed
@@ -80,7 +80,7 @@ class Ball:
         if self.ball_rect.centery < self.ball_radius:
             self.dy = -self.dy
             if self.dx == 0:
-                self.dx = 1 if self.dx > 0 else -1
+                self.dx = random.choice([-1, 1]) if self.dx > 0 else random.choice([-1, 1])
 
         # колізія з веслом
         if self.ball_rect.colliderect(self.paddle.rect) and self.dy > 0:
