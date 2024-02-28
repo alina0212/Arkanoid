@@ -43,7 +43,8 @@ class GameWindow:
 
             # м'яч доторкнувся нижньої межі екрану або розбиті всі блоки, гра завершена
             if ball.check_collision_bottom() or ball.all_bricks_broken():
-                result_window.run(ball.blocks_hit, self.difficulty)  # Передаємо кількість вдарених блоків у вікно результатів гри
+                result_window.run(ball.blocks_hit,
+                                  self.difficulty)  # Передаємо кількість вдарених блоків у вікно результатів гри
                 return
 
             screen.blit(background_image, (0, 0))
@@ -51,11 +52,11 @@ class GameWindow:
             paddle.draw()
             ball.draw_ball()
             pygame.display.flip()
-            clock.tick(120)
+            clock.tick(60)
 
 
 class ResultWindow:
-    def __init__(self):  # , time_spent, blocks_broken
+    def __init__(self):
         self.csv_filename = 'game_history.csv'
         self.background_image = None
         self.time_spent = None  # time_spent
@@ -80,7 +81,7 @@ class ResultWindow:
             writer.writerow([timestamp, difficulty_level, time_spent, blocks_hit])
 
     def run(self, blocks_hit, difficulty):
-        #os.truncate('game_history.csv', 0) #очищення файлу
+        # os.truncate('game_history.csv', 0) #очищення файлу
         pygame.display.set_caption("Result")
         self.screen_result.fill((162, 255, 240))
 
@@ -124,7 +125,7 @@ class HistoryResultsWindow:
     def __init__(self, csv_filename='game_history.csv'):
         self.results = []
         self.csv_filename = csv_filename
-        #csv_path = os.path.join("../game_py", "game_history.csv")
+        # csv_path = os.path.join("../game_py", "game_history.csv")
         self.load_results_from_csv()
 
     def load_results_from_csv(self):
@@ -134,7 +135,8 @@ class HistoryResultsWindow:
                 header = next(reader, None)  # Отримуємо заголовок
                 if header is not None:  # Перевіряємо чи є рядок
                     for row in reader:
-                        self.results.append(row) #файл CSV читається рядок за рядком, кожен рядок стає окремим елементом у списку self.results.
+                        self.results.append(
+                            row)  # файл CSV читається рядок за рядком, кожен рядок стає окремим елементом у списку self.results.
         except FileNotFoundError as e:
             print(f"Помилка: Файл CSV не знайдено. Деталі: {e}")
 
@@ -177,7 +179,7 @@ class Button:
         self.text = text
         self.color = color
         self.last_click_time = 0
-        self.click_duration = 0.25
+        self.click_duration = 0.2
 
     # малюємо кнопку
     def draw(self):
@@ -211,26 +213,18 @@ class Game:
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("Game")
         self.start_time = 0  # Додайте змінну для часу початку гри
+        background_image2_start = pygame.image.load(os.path.join("../image", "start_windon_background.jpg"))
+        background_image_start = pygame.image.load(os.path.join("../image", "ARKANOID.png"))
+        self.resized_image = pygame.transform.scale(background_image_start, (700, 200))
+        self.resized_image2 = pygame.transform.scale(background_image2_start, (800, 600))
 
     def run(self):
+        clock = pygame.time.Clock()
         running = True
         game_window = None
         while running:
-            # self.screen.fill((111, 128, 217))
-            image_path_background_start = os.path.join("../image", "start_windon_background.jpg")
-            image_path = os.path.join("../image", "ARKANOID.png")
-            background_image2_start = pygame.image.load(image_path_background_start)
-            background_image_start = pygame.image.load(image_path)
-            # background_image_start = pygame.image.load('../image/ARKANOID.png')
-            resized_image = pygame.transform.scale(background_image_start, (700, 200))
-            resized_image2 = pygame.transform.scale(background_image2_start, (800, 600))
-            game.screen.blit(resized_image2, (0, 0))
-            game.screen.blit(resized_image, (55, 0))
-            start_button.draw()
-            history_results_button.draw()
-            difficult1_button.draw()
-            difficult2_button.draw()
-            difficult3_button.draw()
+            game.screen.blit(self.resized_image2, (0, 0))
+            game.screen.blit(self.resized_image, (55, 0))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -253,10 +247,16 @@ class Game:
                             game_window.run()
 
                     # перехід у вікно історії результатів
-                    elif history_results_button.is_clicked():
+                    if history_results_button.is_clicked():
                         history_results_window.run()
 
+            start_button.draw()
+            history_results_button.draw()
+            difficult1_button.draw()
+            difficult2_button.draw()
+            difficult3_button.draw()
             pygame.display.flip()
+            clock.tick(60)
 
 
 pygame.init()

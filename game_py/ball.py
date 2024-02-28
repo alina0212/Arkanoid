@@ -48,6 +48,7 @@ class Ball:
             self.dx = random.choice([-1, 0, 1])
             self.dy = random.choice([-1, 1])
             self.speed = self.receive_speed()
+            return self.dx, self.dy, self.speed
 
     # рух м'яча
     def move(self):
@@ -59,6 +60,7 @@ class Ball:
         # використовуємо для колізії з блоками
         self.rect.x = self.ball_rect.x
         self.rect.y = self.ball_rect.y
+        return self.ball_rect.x, self.ball_rect.y
 
     # обираємо швидкість м'яча
     def receive_speed(self):
