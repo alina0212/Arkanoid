@@ -44,7 +44,7 @@ class GameWindow:
             # м'яч доторкнувся нижньої межі екрану або розбиті всі блоки, гра завершена
             if ball.check_collision_bottom() or ball.all_bricks_broken():
                 # Передаємо кількість вдарених блоків у вікно результатів гри
-                result_window.run(ball.blocks_hit, self.difficulty)
+                result_window.run(ball.blocks_hit, self.difficulty, ball)
                 return
 
             screen.blit(background_image, (0, 0))
@@ -57,6 +57,7 @@ class GameWindow:
 
 class ResultWindow:
     def __init__(self):
+
         self.csv_filename = 'game_history.csv'
         self.background_image = None
         self.time_spent = None  # time_spent
@@ -68,7 +69,7 @@ class ResultWindow:
         self.game_over_text = self.font.render("Game Over", True, (0, 0, 0))
         self.time_text = None
         self.blocks_text = None
-        self.you_win_background_image_path = os.path.join("../image", "you_win_background.jpg")
+        #self.you_win_background_image_path = os.path.join("../image", "you_win_background.jpg")
 
     def save_to_csv(self, blocks_hit, difficulty_level):  # Add difficulty_level as a parameter
         timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
@@ -80,13 +81,13 @@ class ResultWindow:
             # Записуємо новий рядок в файл, який містить інформацію про результати гри
             writer.writerow([timestamp, difficulty_level, time_spent, blocks_hit])
 
-    def run(self, blocks_hit, difficulty):
+    def run(self, blocks_hit, difficulty, ball):
         # os.truncate('game_history.csv', 0) #очищення файлу
         pygame.display.set_caption("Result")
         self.screen_result.fill((162, 255, 240))
 
         # Перевіряємо, чи всі блоки розбиті
-        if blocks_hit == 0:
+        if ball.all_bricks_broken():
             # Якщо так, встановлюємо фон на певне зображення
             you_win_background_image_path = os.path.join("../image", "you_win_background.jpg")
             self.background_image = pygame.image.load(you_win_background_image_path)
