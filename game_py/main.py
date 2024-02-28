@@ -1,6 +1,7 @@
 import pygame
 import time
 import os
+import csv
 
 from brick import BrickContainer
 from paddle import Paddle
@@ -42,7 +43,7 @@ class GameWindow:
 
             # м'яч доторкнувся нижньої межі екрану або розбиті всі блоки, гра завершена
             if ball.check_collision_bottom() or ball.all_bricks_broken():
-                result_window.run(ball.blocks_hit)  # Передаємо кількість вдарених блоків у вікно результатів гри
+                result_window.run(ball.blocks_hit, self.difficulty)  # Передаємо кількість вдарених блоків у вікно результатів гри
                 return
 
             screen.blit(background_image, (0, 0))
@@ -55,6 +56,7 @@ class GameWindow:
 
 class ResultWindow:
     def __init__(self):  # , time_spent, blocks_broken
+        self.csv_filename = 'game_history.csv'
         self.background_image = None
         self.time_spent = None  # time_spent
         self.blocks_hit = None  # blocks_broken
@@ -67,7 +69,15 @@ class ResultWindow:
         self.blocks_text = None
         self.you_win_background_image_path = os.path.join("../image", "you_win_background.jpg")
 
-    def run(self, blocks_hit):
+    def save_to_csv(self, blocks_hit, difficulty_level):  # Add difficulty_level as a parameter
+        timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
+        time_spent = round(time.time() - game.start_time, 2)
+        with open(self.csv_filename, mode='a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([timestamp, difficulty_level, time_spent, blocks_hit])
+
+    def run(self, blocks_hit, difficulty):
+        #os.truncate('game_history.csv', 0) #очищення файлу
         pygame.display.set_caption("Result")
         self.screen_result.fill((162, 255, 240))
 
@@ -104,17 +114,32 @@ class ResultWindow:
 
             back_menu_button.draw()
             pygame.display.flip()
+        self.save_to_csv(blocks_hit, difficulty)
 
 
 class HistoryResultsWindow:
-    def __init__(self):
+    def __init__(self, csv_filename='game_history.csv'):
         self.results = []
+        self.csv_filename = csv_filename
+        #csv_path = os.path.join("../game_py", "game_history.csv")
+        self.load_results_from_csv()
+
+    def load_results_from_csv(self):
+        try:
+            with open(self.csv_filename, mode='r', newline='') as file:
+                reader = csv.reader(file)
+                header = next(reader, None)  # Отримуємо заголовок
+                if header is not None:  # Перевіряємо чи є рядок
+                    for row in reader:
+                        self.results.append(row)
+        except FileNotFoundError as e:
+            print(f"Помилка: Файл CSV не знайдено. Деталі: {e}")
 
     def run(self):
         pygame.display.set_caption("History of results")
         screen_history = pygame.display.set_mode((800, 600))
         screen_history.fill((162, 255, 240))
-        result_label_font = pygame.font.SysFont(None, 24)
+        result_label_font = pygame.font.SysFont(None, 32)
 
         running = True
         while running:
@@ -129,21 +154,16 @@ class HistoryResultsWindow:
             back_menu_button.draw()
             pygame.display.flip()
 
-    # додаємо результати
-    def add_result(self, time_spent, blocks_broken):
-        self.results.append((time_spent, blocks_broken))
-        return self.results
-
     # відображаємо результати
     def display_results(self, screen_history, result_label_font):
-        label_surface = result_label_font.render("Results:", True, (255, 255, 255))
-        screen_history.blit(label_surface, (10, 10))
+        label_surface = result_label_font.render("Results:", True, (70, 69, 69))
+        screen_history.blit(label_surface, (20, 70))
 
         for i, result in enumerate(self.results):
-            result_text = f"Result #{i + 1}: Time Spent: {result[0]}, Blocks Broken: {result[1]}"  # Формуємо текст результату
+            result_text = f"Result #{i + 1}: Time Spent: {result[2]}, Blocks Broken: {result[3]}, Difficulty: {result[1]}"  # Формуємо текст результату
             result_surface = result_label_font.render(result_text, True,
-                                                      (255, 255, 255))  # Створюємо поверхню з текстом результату
-            screen_history.blit(result_surface, (10, 40 + i * 20))  # Відображаємо текст результату на вікні
+                                                      (70, 69, 69))  # Створюємо поверхню з текстом результату
+            screen_history.blit(result_surface, (30, 100 + i * 40))  # Відображаємо текст результату на вікні
 
 
 class Button:
@@ -245,7 +265,7 @@ difficult1_button = Button(game.screen, 160, 400, 140, 50, "Easy", (46, 224, 155
 difficult2_button = Button(game.screen, 330, 400, 140, 50, "Medium", (46, 224, 155))
 difficult3_button = Button(game.screen, 500, 400, 140, 50, "Hard", (46, 224, 155))
 
-back_menu_button = Button(game.screen, 5, 5, 140, 50, "Menu", (240, 133, 245))
+back_menu_button = Button(game.screen, 10, 10, 140, 50, "Menu", (240, 133, 245))
 
 history_results_window = HistoryResultsWindow()
 
