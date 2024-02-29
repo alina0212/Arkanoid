@@ -127,6 +127,11 @@ class HistoryResultsWindow:
         self.csv_filename = csv_filename
         # csv_path = os.path.join("../game_py", "game_history.csv")
         self.load_results_from_csv()
+        pygame.display.set_caption("History of results")
+        self.screen_history = pygame.display.set_mode((800, 600))
+        self.window_height = self.screen_history.get_height()
+        self.container_height = len(self.results) * 40
+        self.scroll_pos = 0
 
     def load_results_from_csv(self):
         try:
@@ -134,18 +139,13 @@ class HistoryResultsWindow:
                 reader = csv.reader(file)
                 header = next(reader, None)  # Отримуємо заголовок
                 if header is not None:  # Перевіряємо чи є рядок
-                    for row in reader:
+                    for row in reversed(list(reader)):
                         self.results.append(
                             row)  # файл CSV читається рядок за рядком, кожен рядок стає окремим елементом у списку self.results.
         except FileNotFoundError as e:
             print(f"Помилка: Файл CSV не знайдено. Деталі: {e}")
 
     def run(self):
-        pygame.display.set_caption("History of results")
-        screen_history = pygame.display.set_mode((800, 600))
-        screen_history.fill((162, 255, 240))
-        result_label_font = pygame.font.SysFont(None, 32)
-
         running = True
         while running:
             for event in pygame.event.get():
@@ -154,21 +154,30 @@ class HistoryResultsWindow:
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if back_menu_button.is_clicked():
                         running = False
+                    elif event.button == 4:  # Прокрутка вгору
+                        self.scroll_pos = max(0, self.scroll_pos - 20)
+                    elif event.button == 5:  # Прокрутка вниз
+                        self.scroll_pos = min(max(0, self.container_height - self.window_height), self.scroll_pos + 20)
 
-            self.display_results(screen_history, result_label_font)
+            self.screen_history.fill((162, 255, 240))
+            self.display_results(self.screen_history)
             back_menu_button.draw()
             pygame.display.flip()
 
     # відображаємо результати
-    def display_results(self, screen_history, result_label_font):
+    def display_results(self, screen_history):
+        result_label_font = pygame.font.SysFont(None, 32)
         label_surface = result_label_font.render("Results:", True, (70, 69, 69))
-        screen_history.blit(label_surface, (20, 70))
+        screen_history.blit(label_surface, (20, 70 - self.scroll_pos))
 
         for i, result in enumerate(self.results):
-            result_text = f"Result #{i + 1}: Time Spent: {result[2]}, Blocks Broken: {result[3]}, Difficulty: {result[1]}"  # Формуємо текст результату
+            result_text = f"Result #{len(self.results) - i}: Time Spent: {result[2]}, Blocks Broken: {result[3]}, Difficulty: {result[1]}"  # Формуємо текст результату
             result_surface = result_label_font.render(result_text, True,
                                                       (70, 69, 69))  # Створюємо поверхню з текстом результату
-            screen_history.blit(result_surface, (30, 100 + i * 40))  # Відображаємо текст результату на вікні
+            text_height = result_surface.get_height()
+            if 100 + i * 40 - self.scroll_pos + text_height > 70:  # Перевірка на перетин з кнопкою
+                if 100 + i * 40 - self.scroll_pos < self.window_height:
+                    screen_history.blit(result_surface, (30, 100 + i * 40 - self.scroll_pos))  # Відображаємо текст результату на вікні
 
 
 class Button:
