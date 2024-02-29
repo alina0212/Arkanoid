@@ -9,10 +9,16 @@ from ball import Ball
 
 
 class GameWindow:
+    """
+    відповідає за відображення вікна, де відбувається гра
+    """
     def __init__(self, difficulty):
         self.difficulty = difficulty
 
     def run(self):
+        """
+        метод для запуску гри
+        """
         screen = pygame.display.set_mode((800, 600))
         pygame.display.set_caption("Arkanoid")
         image_path = os.path.join("../image", "backgroung2.png")
@@ -56,6 +62,9 @@ class GameWindow:
 
 
 class ResultWindow:
+    """
+    відповідає за відображення вікна результата гри
+    """
     def __init__(self):
 
         self.csv_filename = 'game_history.csv'
@@ -123,6 +132,9 @@ class ResultWindow:
 
 
 class HistoryResultsWindow:
+    """
+    відповідає за відображення вікна історії результатів гри
+    """
     def __init__(self, csv_filename='game_history.csv'):
         self.results = []
         self.csv_filename = csv_filename
@@ -147,6 +159,9 @@ class HistoryResultsWindow:
             print(f"Помилка: Файл CSV не знайдено. Деталі: {e}")
 
     def run(self):
+        """
+        метод для відображення вікна історії результатів гри
+        """
         running = True
         while running:
             for event in pygame.event.get():
@@ -165,8 +180,11 @@ class HistoryResultsWindow:
             back_menu_button.draw()
             pygame.display.flip()
 
-    # відображаємо результати
     def display_results(self, screen_history):
+        """
+        відображаємо результати
+        :param screen_history:
+        """
         result_label_font = pygame.font.SysFont(None, 32)
         label_surface = result_label_font.render("Results:", True, (70, 69, 69))
         screen_history.blit(label_surface, (20, 70 - self.scroll_pos))
@@ -182,6 +200,9 @@ class HistoryResultsWindow:
 
 
 class Button:
+    """
+    відповідає за створення кнопок
+    """
     def __init__(self, screen, x, y, width, height, text, color):
         self.default_color = color
         self.screen = screen
@@ -191,8 +212,10 @@ class Button:
         self.last_click_time = 0
         self.click_duration = 0.2
 
-    # малюємо кнопку
     def draw(self):
+        """
+        малюємо кнопку
+        """
         self.update()
         pygame.draw.rect(self.screen, self.color, self.rect, border_radius=30)
         font = pygame.font.SysFont(None, 32)
@@ -200,15 +223,21 @@ class Button:
         text_rect = text.get_rect(center=self.rect.center)
         self.screen.blit(text, text_rect)
 
-    # оновлює колір кнопки
     def update(self):
+        """
+        оновлює колір кнопки
+        :return: колір кнопки
+        """
         if time.time() - self.last_click_time < self.click_duration:
             self.color = (245, 255, 230)
         else:
             self.color = self.default_color
 
-    # перевіряємо, чи мишка натиснула і якщо так, то оновлюємо час кліку
     def is_clicked(self):
+        """
+        перевіряємо, чи мишка натиснула і якщо так, то оновлюємо час кліку
+        :return: clicked
+        """
         mouse_pos = pygame.mouse.get_pos()
         clicked = self.rect.collidepoint(mouse_pos)
         if clicked:
@@ -217,6 +246,9 @@ class Button:
 
 
 class Game:
+    """
+    відповідає за керування меню
+    """
     def __init__(self):
         self.width = 800
         self.height = 600
@@ -229,6 +261,9 @@ class Game:
         self.resized_image2 = pygame.transform.scale(background_image2_start, (800, 600))
 
     def run(self):
+        """
+        метод для запуску гри
+        """
         clock = pygame.time.Clock()
         running = True
         game_window = None
