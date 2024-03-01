@@ -140,7 +140,6 @@ class HistoryResultsWindow:
         self.csv_filename = csv_filename
         # csv_path = os.path.join("../game_py", "game_history.csv")
         self.load_results_from_csv()
-        pygame.display.set_caption("History of results")
         self.screen_history = pygame.display.set_mode((800, 600))
         self.window_height = self.screen_history.get_height()
         self.container_height = len(self.results) * 40
@@ -153,15 +152,20 @@ class HistoryResultsWindow:
                 header = next(reader, None)  # Отримуємо заголовок
                 if header is not None:  # Перевіряємо чи є рядок
                     for row in reversed(list(reader)):
-                        self.results.append(
-                            row)  # файл CSV читається рядок за рядком, кожен рядок стає окремим елементом у списку self.results.
+                         self.results.append(
+                             row)  # файл CSV читається рядок за рядком, кожен рядок стає окремим елементом у списку self.results.
         except FileNotFoundError as e:
             print(f"Помилка: Файл CSV не знайдено. Деталі: {e}")
+
+    def update_results(self):
+        self.results = []
+        self.load_results_from_csv()
 
     def run(self):
         """
         метод для відображення вікна історії результатів гри
         """
+        pygame.display.set_caption("History of results")
         running = True
         while running:
             for event in pygame.event.get():
@@ -176,6 +180,7 @@ class HistoryResultsWindow:
                         self.scroll_pos = min(max(0, self.container_height - self.window_height), self.scroll_pos + 20)
 
             self.screen_history.fill((162, 255, 240))
+            self.update_results()
             self.display_results(self.screen_history)
             back_menu_button.draw()
             pygame.display.flip()
@@ -253,7 +258,6 @@ class Game:
         self.width = 800
         self.height = 600
         self.screen = pygame.display.set_mode((self.width, self.height))
-        pygame.display.set_caption("Game")
         self.start_time = 0  # Додайте змінну для часу початку гри
         background_image2_start = pygame.image.load(os.path.join("../image", "start_windon_background.jpg"))
         background_image_start = pygame.image.load(os.path.join("../image", "ARKANOID.png"))
@@ -270,7 +274,7 @@ class Game:
         while running:
             game.screen.blit(self.resized_image2, (0, 0))
             game.screen.blit(self.resized_image, (55, 0))
-
+            pygame.display.set_caption("Game")
             start_button.draw()
             history_results_button.draw()
             difficult1_button.draw()
