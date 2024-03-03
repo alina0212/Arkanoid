@@ -78,31 +78,33 @@ class ResultWindow:
         self.game_over_text = self.font.render("Game Over", True, (0, 0, 0))
         self.time_text = None
         self.blocks_text = None
-        #self.you_win_background_image_path = os.path.join("../image", "you_win_background.jpg")
 
-    def save_to_csv(self, blocks_hit, difficulty_level):  # Add difficulty_level as a parameter
+    """
+    метод - збереження данних(дату, час, складність, к-сть блоків розбитих) у файл csv 
+    """
+    def save_to_csv(self, blocks_hit, difficulty_level, time_spent):
         timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
-        time_spent = round(time.time() - game.start_time, 2)
         # Відкриваємо файл CSV у режимі додавання з новим рядком
         with open(self.csv_filename, mode='a', newline='') as file:
             # Створюємо об'єкт для запису в файл CSV
             writer = csv.writer(file)
             # Записуємо новий рядок в файл, який містить інформацію про результати гри
             writer.writerow([timestamp, difficulty_level, time_spent, blocks_hit])
-
+    """
+    метод для запуску вікна результату після закінчення гри
+    """
     def run(self, blocks_hit, difficulty, ball):
-        # os.truncate('game_history.csv', 0) #очищення файлу
         pygame.display.set_caption("Result")
         self.screen_result.fill((162, 255, 240))
 
         # Перевіряємо, чи всі блоки розбиті
         if ball.all_bricks_broken():
-            # Якщо так, встановлюємо фон на певне зображення
+            # Якщо так, встановлюємо фон на переможне зображення
             you_win_background_image_path = os.path.join("../image", "you_win_background.jpg")
             self.background_image = pygame.image.load(you_win_background_image_path)
             self.screen_result.blit(self.background_image, (0, 0))
         else:
-            # Якщо ні, залишаємо фон як заданий
+            # Якщо ні,  фон як програшу
             you_lost_background_image_path = os.path.join("../image", "you_lost_background.jpg")
             self.background_image = pygame.image.load(you_lost_background_image_path)
             self.screen_result.blit(self.background_image, (0, 0))
@@ -128,7 +130,7 @@ class ResultWindow:
 
             back_menu_button.draw()
             pygame.display.flip()
-        self.save_to_csv(blocks_hit, difficulty)
+        self.save_to_csv(blocks_hit, difficulty, self.time_spent)
 
 
 class HistoryResultsWindow:
@@ -142,9 +144,11 @@ class HistoryResultsWindow:
         self.load_results_from_csv()
         self.screen_history = pygame.display.set_mode((800, 600))
         self.window_height = self.screen_history.get_height()
-        self.container_height = len(self.results) * 40
+        self.container_height = len(self.results) * 40 #обчислює висоту контейнера для відображення результатів у вікні історії гри
         self.scroll_pos = 0
-
+    """
+    метод що чатає файл з результатими і записує їх у список
+    """
     def load_results_from_csv(self):
         try:
             with open(self.csv_filename, mode='r', newline='') as file:  # r  бо режим read
@@ -157,6 +161,9 @@ class HistoryResultsWindow:
         except FileNotFoundError as e:
             print(f"Помилка: Файл CSV не знайдено. Деталі: {e}")
 
+    """
+    метод для оновлення результатів з останньою грою
+    """
     def update_results(self):
         self.results = []
         self.load_results_from_csv()

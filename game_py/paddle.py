@@ -3,6 +3,9 @@ from pygame.locals import *
 
 
 class Paddle():
+    """
+    відповідає за відображення і керуванням paddle
+    """
 
     def __init__(self, screen):
         self.screen = screen
@@ -15,9 +18,15 @@ class Paddle():
         self.coordinates = [0, 0]  # Початкові координати платформи
         self.speed = 10  # Швидкість руху платформи
 
+    """
+    метод який малює paddle
+    """
     def draw(self):
         self.screen.blit(self.image, self.rect)
 
+    """
+    метод що відповідає за рух платформи і щоб вона не виходила за свої межі
+    """
     def move(self):
         # Отримання стану натискання клавіш
         keys = pygame.key.get_pressed()
@@ -32,5 +41,3 @@ class Paddle():
         if self.rect.right > self.screen_rect.right:
             self.rect.right = self.screen_rect.right
 
-    def receive_coordinates(self):
-        return self.rect.centerx, self.rect.bottom
