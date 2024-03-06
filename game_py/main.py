@@ -23,7 +23,6 @@ class GameWindow:
         pygame.display.set_caption("Arkanoid")
         image_path = os.path.join("../image", "backgroung2.png")
         background_image = pygame.image.load(image_path)
-        # background_image = pygame.image.load('../image/backgroung2.png')
 
         brick_container = BrickContainer(screen)
         block_list = brick_container.generate_block_list((153, 99, 241))
@@ -69,8 +68,8 @@ class ResultWindow:
 
         self.csv_filename = 'game_history.csv'
         self.background_image = None
-        self.time_spent = None  # time_spent
-        self.blocks_hit = None  # blocks_broken
+        self.time_spent = None
+        self.blocks_hit = None
         self.font = pygame.font.SysFont(None, 50)
         self.screen_result = pygame.display.set_mode((800, 600))
         self.width = self.screen_result.get_width()
@@ -140,7 +139,6 @@ class HistoryResultsWindow:
     def __init__(self, csv_filename='game_history.csv'):
         self.results = []
         self.csv_filename = csv_filename
-        # csv_path = os.path.join("../game_py", "game_history.csv")
         self.load_results_from_csv()
         self.screen_history = pygame.display.set_mode((800, 600))
         self.window_height = self.screen_history.get_height()
