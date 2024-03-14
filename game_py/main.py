@@ -10,14 +10,15 @@ from ball import Ball
 
 class GameWindow:
     """
-    відповідає за відображення вікна, де відбувається гра
+    responsible for displaying the window where the game takes place
     """
+
     def __init__(self, difficulty):
         self.difficulty = difficulty
 
     def run(self):
         """
-        метод для запуску гри
+        method to launch the game
         """
         screen = pygame.display.set_mode((800, 600))
         pygame.display.set_caption("Arkanoid")
@@ -46,9 +47,9 @@ class GameWindow:
             ball.collision()
             ball.check_collision_brick()
 
-            # м'яч доторкнувся нижньої межі екрану або розбиті всі блоки, гра завершена
+            # the ball touches the bottom of the screen or all blocks are broken, the game is over
             if ball.check_collision_bottom() or ball.all_bricks_broken():
-                # Передаємо кількість вдарених блоків у вікно результатів гри
+                # return the number of blocks hit to the game results window
                 result_window.run(ball.blocks_hit, self.difficulty, ball)
                 return
 
@@ -62,8 +63,9 @@ class GameWindow:
 
 class ResultWindow:
     """
-    відповідає за відображення вікна результата гри
+    responsible for displaying the game result window
     """
+
     def __init__(self):
 
         self.csv_filename = 'game_history.csv'
@@ -79,37 +81,40 @@ class ResultWindow:
         self.blocks_text = None
 
     """
-    метод - збереження данних(дату, час, складність, к-сть блоків розбитих) у файл csv 
+    method - saving data (date, time, difficulty, number of blocks broken) to a csv file 
     """
+
     def save_to_csv(self, blocks_hit, difficulty_level, time_spent):
         timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
-        # Відкриваємо файл CSV у режимі додавання з новим рядком
+        # open a CSV file in add mode with a new line
         with open(self.csv_filename, mode='a', newline='') as file:
-            # Створюємо об'єкт для запису в файл CSV
+            # create an object to write to a CSV file
             writer = csv.writer(file)
-            # Записуємо новий рядок в файл, який містить інформацію про результати гри
+            # write a new line to the file containing information about the game results
             writer.writerow([timestamp, difficulty_level, time_spent, blocks_hit])
+
     """
-    метод для запуску вікна результату після закінчення гри
+    method for launching the result window after the end of the game
     """
+
     def run(self, blocks_hit, difficulty, ball):
         pygame.display.set_caption("Result")
         self.screen_result.fill((162, 255, 240))
 
-        # Перевіряємо, чи всі блоки розбиті
+        # check if all blocks are broken
         if ball.all_bricks_broken():
-            # Якщо так, встановлюємо фон на переможне зображення
+            # if so, set the background to the winning image
             you_win_background_image_path = os.path.join("../image", "you_win_background.jpg")
             self.background_image = pygame.image.load(you_win_background_image_path)
             self.screen_result.blit(self.background_image, (0, 0))
         else:
-            # Якщо ні,  фон як програшу
+            # if not, the background as a loss
             you_lost_background_image_path = os.path.join("../image", "you_lost_background.jpg")
             self.background_image = pygame.image.load(you_lost_background_image_path)
             self.screen_result.blit(self.background_image, (0, 0))
 
-        # Розміщуємо фонове зображення на екрані
-        self.time_spent = round(time.time() - game.start_time, 2)  # Обчислюємо час гри
+        # place the background image on the screen
+        self.time_spent = round(time.time() - game.start_time, 2)  # calculate the game time
         self.time_text = self.font.render("Time Spent: " + str(round(self.time_spent, 2)), True, (0, 0, 0))
         self.blocks_text = self.font.render("Blocks Broken: " + str(blocks_hit), True, (0, 0, 0))
 
@@ -134,41 +139,46 @@ class ResultWindow:
 
 class HistoryResultsWindow:
     """
-    відповідає за відображення вікна історії результатів гри
+    responsible for displaying the game results history window
     """
+
     def __init__(self, csv_filename='game_history.csv'):
         self.results = []
         self.csv_filename = csv_filename
         self.load_results_from_csv()
         self.screen_history = pygame.display.set_mode((800, 600))
         self.window_height = self.screen_history.get_height()
-        self.container_height = len(self.results) * 40 #обчислює висоту контейнера для відображення результатів у вікні історії гри
+        self.container_height = len(self.results) * 40  # calculates the height of the container to display
+        # the results in the game history window
         self.scroll_pos = 0
+
     """
     метод що чатає файл з результатими і записує їх у список
     """
+
     def load_results_from_csv(self):
         try:
-            with open(self.csv_filename, mode='r', newline='') as file:  # r  бо режим read
+            with open(self.csv_filename, mode='r', newline='') as file:  # r  because mode read
                 reader = csv.reader(file)
-                header = next(reader, None)  # Отримуємо заголовок
-                if header is not None:  # Перевіряємо чи є рядок
+                header = next(reader, None)  # get the header
+                if header is not None:  # check if there is a string
                     for row in reversed(list(reader)):
-                         self.results.append(
-                             row)  # файл CSV читається рядок за рядком, кожен рядок стає окремим елементом у списку self.results.
+                        # the CSV file is read line by line, each line becomes a separate item in the self.results list
+                        self.results.append(row)
         except FileNotFoundError as e:
-            print(f"Помилка: Файл CSV не знайдено. Деталі: {e}")
+            print(f"Error: CSV file not found. Details: {e}")
 
     """
-    метод для оновлення результатів з останньою грою
+    method to update the results with the last game
     """
+
     def update_results(self):
         self.results = []
         self.load_results_from_csv()
 
     def run(self):
         """
-        метод для відображення вікна історії результатів гри
+        method for displaying the game results history window
         """
         pygame.display.set_caption("History of results")
         running = True
@@ -179,9 +189,9 @@ class HistoryResultsWindow:
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if back_menu_button.is_clicked():
                         running = False
-                    elif event.button == 4:  # Прокрутка вгору
+                    elif event.button == 4:  # scroll up
                         self.scroll_pos = max(0, self.scroll_pos - 20)
-                    elif event.button == 5:  # Прокрутка вниз
+                    elif event.button == 5:  # scroll down
                         self.scroll_pos = min(max(0, self.container_height - self.window_height), self.scroll_pos + 20)
 
             self.screen_history.fill((162, 255, 240))
@@ -192,7 +202,7 @@ class HistoryResultsWindow:
 
     def display_results(self, screen_history):
         """
-        відображаємо результати
+        display the results
         :param screen_history:
         """
         result_label_font = pygame.font.SysFont(None, 32)
@@ -200,19 +210,22 @@ class HistoryResultsWindow:
         screen_history.blit(label_surface, (20, 70 - self.scroll_pos))
 
         for i, result in enumerate(self.results):
-            result_text = f"Result #{len(self.results) - i}: Time Spent: {result[2]}, Blocks Broken: {result[3]}, Difficulty: {result[1]}" # Формуємо текст результату
+            # create the text of the result
+            result_text = f"Result #{len(self.results) - i}: Time Spent: {result[2]}, Blocks Broken: {result[3]}, Difficulty: {result[1]}"
             result_surface = result_label_font.render(result_text, True,
-                                                      (70, 69, 69))  # Створюємо поверхню з текстом результату
+                                                      (70, 69, 69))  # create a surface with the result text
             text_height = result_surface.get_height()
-            if 100 + i * 40 - self.scroll_pos + text_height > 70:  # Перевірка на перетин з кнопкою
+            if 100 + i * 40 - self.scroll_pos + text_height > 70:  # check for intersection with a button
                 if 100 + i * 40 - self.scroll_pos < self.window_height:
-                    screen_history.blit(result_surface, (30, 100 + i * 40 - self.scroll_pos))  # Відображаємо текст результату на вікні
+                    screen_history.blit(result_surface,
+                                        (30, 100 + i * 40 - self.scroll_pos))  # display the result text on the window
 
 
 class Button:
     """
-    відповідає за створення кнопок
+    responsible for creating buttons
     """
+
     def __init__(self, screen, x, y, width, height, text, color):
         self.default_color = color
         self.screen = screen
@@ -224,7 +237,7 @@ class Button:
 
     def draw(self):
         """
-        малюємо кнопку
+        draw a button
         """
         self.update()
         pygame.draw.rect(self.screen, self.color, self.rect, border_radius=30)
@@ -235,8 +248,8 @@ class Button:
 
     def update(self):
         """
-        оновлює колір кнопки
-        :return: колір кнопки
+        updates the color of the button_
+        :return: button_ color
         """
         if time.time() - self.last_click_time < self.click_duration:
             self.color = (245, 255, 230)
@@ -245,7 +258,7 @@ class Button:
 
     def is_clicked(self):
         """
-        перевіряємо, чи мишка натиснула і якщо так, то оновлюємо час кліку
+        check if the mouse was clicked and if so, update the click time
         :return: clicked
         """
         mouse_pos = pygame.mouse.get_pos()
@@ -257,13 +270,14 @@ class Button:
 
 class Game:
     """
-    відповідає за керування меню
+    responsible for menu navigation
     """
+
     def __init__(self):
         self.width = 800
         self.height = 600
         self.screen = pygame.display.set_mode((self.width, self.height))
-        self.start_time = 0  # Додайте змінну для часу початку гри
+        self.start_time = 0  # add a variable for the game start time
         background_image2_start = pygame.image.load(os.path.join("../image", "start_windon_background.jpg"))
         background_image_start = pygame.image.load(os.path.join("../image", "ARKANOID.png"))
         self.resized_image = pygame.transform.scale(background_image_start, (700, 200))
@@ -271,7 +285,7 @@ class Game:
 
     def run(self):
         """
-        метод для запуску гри
+        method to run the game
         """
         clock = pygame.time.Clock()
         running = True
@@ -290,7 +304,7 @@ class Game:
                 if event.type == pygame.QUIT:
                     running = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    # обираємо складність
+                    # choose the difficulty
                     if difficult1_button.is_clicked():
                         game_window = GameWindow(difficulty=1)
 
@@ -300,13 +314,13 @@ class Game:
                     elif difficult3_button.is_clicked():
                         game_window = GameWindow(difficulty=3)
 
-                    # перехід у вікно гри
+                    # switch to the game window
                     if start_button.is_clicked():
-                        self.start_time = time.time()  # Запам'ятовуємо час початку гри
+                        self.start_time = time.time()  # memorize the game start time
                         if game_window is not None:
                             game_window.run()
 
-                    # перехід у вікно історії результатів
+                    # switch to the results history window
                     if history_results_button.is_clicked():
                         history_results_window.run()
 

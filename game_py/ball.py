@@ -5,12 +5,12 @@ import random
 
 class Ball:
     """
-    клас, що відповідає за відображення та дії м'яча
+    class responsible for the reflection and action of the ball
     """
     def __init__(self, screen, paddle, brick_sprites, difficulty):
         self.screen = screen
         self.paddle = paddle
-        self.brick_sprites = brick_sprites  # Група блоків
+        self.brick_sprites = brick_sprites  # block group
         self.difficulty = difficulty
         self.speed = None
         self.ball_radius = 10
@@ -24,12 +24,12 @@ class Ball:
         self.speed = self.receive_speed()
         self.color = "black"
         self.ball_rect = self.initial_position()
-        self.rect = pygame.Rect(self.ball_rect) # Створення прямокутника, що обмежує м'яч
-        self.blocks_hit = 0  # Додано для відстеження кількості блоків, які гравець вдарив
+        self.rect = pygame.Rect(self.ball_rect)  # create a rectangle that bounds the ball
+        self.blocks_hit = 0  # added to track the number of blocks a player has hit
 
     def draw_ball(self):
         """
-        малюємо м'яч
+        draw a ball
         :return: True
         """
         pygame.draw.circle(self.screen, self.color, self.ball_rect.center, self.ball_radius)
@@ -37,13 +37,13 @@ class Ball:
 
     def initial_position(self):
         """
-        встановлюємо початкову позицію м'яча
-        створюємо прямокутник для розташування м'яча
-        :return: розташування м'яча
+        set the starting position of the ball
+        create a rectangle for the location of the ball
+        :return: location of the ball
         """
-        ball_r = int(self.ball_radius * 2 ** 0.5)  # визначаємо м'яч, як квадрат
+        ball_r = int(self.ball_radius * 2 ** 0.5)  # define the ball as a square
 
-        # встановлюємо (посередині плаформи, відстань між платф. і м'ячем - діаметр м'яча, ширина, висота)
+        # set (in the middle of the plate, the distance between the plate and ball - ball diameter, width, height)
         ball_rect = pygame.Rect(self.paddle.rect.centerx - self.ball_radius, self.paddle.rect.top - ball_r, ball_r,
                                 ball_r)
 
@@ -51,11 +51,11 @@ class Ball:
 
     def start_move(self):
         """
-        початковий рух м'яча
-        :return: x, y, швидкість
+        initial ball movement
+        :return: x, y, speed
         """
         if self.dx == 0 and self.dy == 0:
-            # Генеруємо випадковий напрямок руху
+            # generate a random direction of movement
             self.dx = random.choice([-1, 0, 1])
             self.dy = random.choice([-1, 1])
             self.speed = self.receive_speed()
@@ -63,23 +63,23 @@ class Ball:
 
     def move(self):
         """
-        рух м'яча
-        :return: координати x, y
+        ball movement
+        :return: coordinates x, y
         """
-        # оновлюються координати м'яча
+        # updated ball coordinates
         self.ball_rect.x += self.speed * self.dx
         self.ball_rect.y += self.speed * self.dy
 
-        # координати верхнього лівого кута прямокутника, що обмежує м'яч
-        # використовуємо для колізії з блоками
+        # coordinates of the upper left corner of the rectangle bounding the ball
+        # use for collision with blocks
         self.rect.x = self.ball_rect.x
         self.rect.y = self.ball_rect.y
         return self.ball_rect.x, self.ball_rect.y
 
     def receive_speed(self):
         """
-        обираємо швидкість м'яча
-        :return: швидкість
+        choose the speed of the ball
+        :return: speed
         """
         if self.difficulty == 1:
             return self.speed_1
@@ -90,53 +90,53 @@ class Ball:
 
     def collision(self):
         """
-        обробляємо колізії
+        handle collisions
         """
-        # колізія з правою, лівою межею
+        # collision with the right, left border
         if self.ball_rect.centerx < self.ball_radius or self.ball_rect.centerx > self.width - self.ball_radius:
             self.dx = -self.dx
 
-        # колізія з верхнею межею
+        # collision with the upper boundary
         if self.ball_rect.centery < self.ball_radius:
             self.dy = -self.dy
             if self.dx == 0:
                 self.dx = random.choice([-1, 1]) if self.dx > 0 else random.choice([-1, 1])
 
-        # колізія з веслом
+        # collision with a paddle
         if self.ball_rect.colliderect(self.paddle.rect) and self.dy > 0:
             self.dy = -self.dy
 
     def check_collision_brick(self):
         """
-        перевіряємо колізію з блоками
+        check for collisions with blocks
         """
         hits = pygame.sprite.spritecollide(self, self.brick_sprites, True)
         for hit in hits:
-            self.blocks_hit += 1  # Додано для відстеження кількості блоків, які гравець вдарив
-            if self.dx > 0:  # якщо м'яч рухався вправо, змінюємо напрямок наліво
+            self.blocks_hit += 1  # added to track the number of blocks a player has hit
+            if self.dx > 0:  # if the ball was moving to the right, change the direction to the left
                 self.dx = -self.dx
-            elif self.dx < 0:  # якщо м'яч рухався вліво, змінюємо напрямок направо
+            elif self.dx < 0:  # if the ball was moving to the left, change the direction to the right
                 self.dx = -self.dx
 
-            if self.dy > 0:  # якщо м'яч рухався вниз, змінюємо напрямок вгору
+            if self.dy > 0:  # if the ball was moving down, change the direction up
                 self.dy = -self.dy
-            elif self.dy < 0:  # якщо м'яч рухався вгору, змінюємо напрямок вниз
+            elif self.dy < 0:  # if the ball was moving up, change the direction down
                 self.dy = -self.dy
 
-            # видаляємо блок із групи
+            # remove the block from the group
             self.brick_sprites.remove(hit)
 
     def all_bricks_broken(self):
         """
-        перевіряємо, чи всі блоки розбиті
+        check if all blocks are broken
         :return: True
         """
         return len(self.brick_sprites) == 0
 
     def check_collision_bottom(self):
         """
-        перевіряємо, чи доторкнувся м'яч нижньої межі
-        :return: доторкнувся / не доторкнувся
+        check whether the ball has touched the bottom line
+        :return: touched / not touched
         """
         if self.ball_rect.bottom >= self.height:
             return True

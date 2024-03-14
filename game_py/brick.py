@@ -3,7 +3,7 @@ import pygame
 
 class Block(pygame.sprite.Sprite):
     """
-       є підкласом класу pygame.sprite.Sprite і відповідає за представлення блоків у грi
+    a subclass of the pygame.sprite.Sprite class and is responsible for representing blocks in the game
     """
     def __init__(self, x, y, color, width=100, height=40):
         super().__init__()
@@ -16,7 +16,7 @@ class Block(pygame.sprite.Sprite):
 
 class BrickContainer:
     """
-            відповідає за створення та управління контейнером блоків у грі
+    responsible for creating and controlling the block container in the game
     """
     def __init__(self, screen):
         self.screen = screen
@@ -29,7 +29,7 @@ class BrickContainer:
 
     def generate_block_list(self, color):
         """
-        створюється список блоків
+        list of blocks is created
         :param color:
         :return:
         """
@@ -38,10 +38,10 @@ class BrickContainer:
         block_height = 40
         for i in range(self.num_cols):
             for j in range(self.num_rows):
-                # Обчислює позицію кожного блоку на основі відступів та розмірів блоків
+                # calculates the position of each block based on the indentation and size of the blocks
                 x = self.margin_x + i * (block_width + self.margin_x)
                 y = self.margin_y + j * (block_height + self.margin_y)
                 block = Block(x, y, color)
                 block_list.append(block)
-                # Створює новий блок і додає його до списку блоків
+                # creates a new block and adds it to the list of blocks
         return block_list
