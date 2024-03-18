@@ -1,22 +1,20 @@
 import pygame
 import pygame.sprite
 import random
+from constants import ball_radius, speed_1, speed_2, speed_3
 
 
 class Ball:
     """
     class responsible for the reflection and action of the ball
     """
+
     def __init__(self, screen, paddle, brick_sprites, difficulty):
         self.screen = screen
         self.paddle = paddle
         self.brick_sprites = brick_sprites  # block group
         self.difficulty = difficulty
         self.speed = None
-        self.ball_radius = 10
-        self.speed_1 = 6
-        self.speed_2 = 10
-        self.speed_3 = 14
         self.width = self.screen.get_width()
         self.height = self.screen.get_height()
         self.dx = 0
@@ -32,7 +30,7 @@ class Ball:
         draw a ball
         :return: True
         """
-        pygame.draw.circle(self.screen, self.color, self.ball_rect.center, self.ball_radius)
+        pygame.draw.circle(self.screen, self.color, self.ball_rect.center, ball_radius)
         return True
 
     def initial_position(self):
@@ -41,10 +39,10 @@ class Ball:
         create a rectangle for the location of the ball
         :return: location of the ball
         """
-        ball_r = int(self.ball_radius * 2 ** 0.5)  # define the ball as a square
+        ball_r = int(ball_radius * 2 ** 0.5)  # define the ball as a square
 
         # set (in the middle of the plate, the distance between the plate and ball - ball diameter, width, height)
-        ball_rect = pygame.Rect(self.paddle.rect.centerx - self.ball_radius, self.paddle.rect.top - ball_r, ball_r,
+        ball_rect = pygame.Rect(self.paddle.rect.centerx - ball_radius, self.paddle.rect.top - ball_r, ball_r,
                                 ball_r)
 
         return ball_rect
@@ -82,22 +80,22 @@ class Ball:
         :return: speed
         """
         if self.difficulty == 1:
-            return self.speed_1
+            return speed_1
         elif self.difficulty == 2:
-            return self.speed_2
+            return speed_2
         elif self.difficulty == 3:
-            return self.speed_3
+            return speed_3
 
     def collision(self):
         """
         handle collisions
         """
         # collision with the right, left border
-        if self.ball_rect.centerx < self.ball_radius or self.ball_rect.centerx > self.width - self.ball_radius:
+        if self.ball_rect.centerx < ball_radius or self.ball_rect.centerx > self.width - ball_radius:
             self.dx = -self.dx
 
         # collision with the upper boundary
-        if self.ball_rect.centery < self.ball_radius:
+        if self.ball_rect.centery < ball_radius:
             self.dy = -self.dy
             if self.dx == 0:
                 self.dx = random.choice([-1, 1]) if self.dx > 0 else random.choice([-1, 1])
@@ -141,5 +139,3 @@ class Ball:
         if self.ball_rect.bottom >= self.height:
             return True
         return False
-
-
