@@ -1,7 +1,7 @@
 import pygame
 import pygame.sprite
 import random
-from constants import ball_radius, speed_1, speed_2, speed_3
+from constants import ball_radius, speed_1, speed_2, speed_3, color
 
 
 class Ball:
@@ -20,7 +20,6 @@ class Ball:
         self.dx = 0
         self.dy = 0
         self.speed = self.receive_speed()
-        self.color = "black"
         self.ball_rect = self.initial_position()
         self.rect = pygame.Rect(self.ball_rect)  # create a rectangle that bounds the ball
         self.blocks_hit = 0  # added to track the number of blocks a player has hit
@@ -30,7 +29,7 @@ class Ball:
         draw a ball
         :return: True
         """
-        pygame.draw.circle(self.screen, self.color, self.ball_rect.center, ball_radius)
+        pygame.draw.circle(self.screen, color, self.ball_rect.center, ball_radius)
         return True
 
     def initial_position(self):

@@ -6,6 +6,10 @@ import csv
 from brick import BrickContainer
 from paddle import Paddle
 from ball import Ball
+from constants import (color_brick, font_size, display_height, display_width, font_size_result, text_color,
+                       screen_history_color, screen_result_color, button_color, frames_per_second, screen_history_fill,
+                       difficult_button_color, start_history_menu_button, button_height, click_duration,
+                       button_update_color)
 
 
 class GameWindow:
@@ -20,13 +24,13 @@ class GameWindow:
         """
         method to launch the game
         """
-        screen = pygame.display.set_mode((800, 600))
+        screen = pygame.display.set_mode((display_width, display_height))
         pygame.display.set_caption("Arkanoid")
         image_path = os.path.join("../image", "backgroung2.png")
         background_image = pygame.image.load(image_path)
 
         brick_container = BrickContainer(screen)
-        block_list = brick_container.generate_block_list((153, 99, 241))
+        block_list = brick_container.generate_block_list(color_brick)
         block_sprites = pygame.sprite.Group(block_list)
         paddle = Paddle(screen)
         ball = Ball(screen, paddle, block_sprites, self.difficulty)
@@ -58,7 +62,7 @@ class GameWindow:
             paddle.draw()
             ball.draw_ball()
             pygame.display.flip()
-            clock.tick(60)
+            clock.tick(frames_per_second)
 
 
 class ResultWindow:
@@ -72,11 +76,11 @@ class ResultWindow:
         self.background_image = None
         self.time_spent = None
         self.blocks_hit = None
-        self.font = pygame.font.SysFont(None, 50)
-        self.screen_result = pygame.display.set_mode((800, 600))
+        self.font = pygame.font.SysFont("default", font_size)
+        self.screen_result = pygame.display.set_mode((display_width, display_height))
         self.width = self.screen_result.get_width()
         self.height = self.screen_result.get_height()
-        self.game_over_text = self.font.render("Game Over", True, (0, 0, 0))
+        self.game_over_text = self.font.render("Game Over", True, text_color)
         self.time_text = None
         self.blocks_text = None
 
@@ -99,7 +103,7 @@ class ResultWindow:
 
     def run(self, blocks_hit, difficulty, ball):
         pygame.display.set_caption("Result")
-        self.screen_result.fill((162, 255, 240))
+        self.screen_result.fill(screen_result_color)
 
         # check if all blocks are broken
         if ball.all_bricks_broken():
@@ -115,8 +119,8 @@ class ResultWindow:
 
         # place the background image on the screen
         self.time_spent = round(time.time() - game.start_time, 2)  # calculate the game time
-        self.time_text = self.font.render("Time Spent: " + str(round(self.time_spent, 2)), True, (0, 0, 0))
-        self.blocks_text = self.font.render("Blocks Broken: " + str(blocks_hit), True, (0, 0, 0))
+        self.time_text = self.font.render("Time Spent: " + str(round(self.time_spent, 2)), True, text_color)
+        self.blocks_text = self.font.render("Blocks Broken: " + str(blocks_hit), True, text_color)
 
         running = True
         while running:
@@ -146,7 +150,7 @@ class HistoryResultsWindow:
         self.results = []
         self.csv_filename = csv_filename
         self.load_results_from_csv()
-        self.screen_history = pygame.display.set_mode((800, 600))
+        self.screen_history = pygame.display.set_mode((display_width, display_height))
         self.window_height = self.screen_history.get_height()
         self.container_height = len(self.results) * 40  # calculates the height of the container to display
         # the results in the game history window
@@ -194,7 +198,7 @@ class HistoryResultsWindow:
                     elif event.button == 5:  # scroll down
                         self.scroll_pos = min(max(0, self.container_height - self.window_height), self.scroll_pos + 20)
 
-            self.screen_history.fill((162, 255, 240))
+            self.screen_history.fill(screen_history_fill)
             self.update_results()
             self.display_results(self.screen_history)
             back_menu_button.draw()
@@ -205,15 +209,16 @@ class HistoryResultsWindow:
         display the results
         :param screen_history:
         """
-        result_label_font = pygame.font.SysFont(None, 32)
-        label_surface = result_label_font.render("Results:", True, (70, 69, 69))
+        result_label_font = pygame.font.SysFont("default", font_size_result)
+        label_surface = result_label_font.render("Results:", True, screen_history_color)
         screen_history.blit(label_surface, (20, 70 - self.scroll_pos))
 
         for i, result in enumerate(self.results):
             # create the text of the result
-            result_text = f"Result #{len(self.results) - i}: Time Spent: {result[2]}, Blocks Broken: {result[3]}, Difficulty: {result[1]}"
+            result_text = (f"Result #{len(self.results) - i}: Time Spent: {result[2]}, Blocks Broken: {result[3]}, "
+                           f"Difficulty: {result[1]}")
             result_surface = result_label_font.render(result_text, True,
-                                                      (70, 69, 69))  # create a surface with the result text
+                                                      screen_history_color)  # create a surface with the result text
             text_height = result_surface.get_height()
             if 100 + i * 40 - self.scroll_pos + text_height > 70:  # check for intersection with a button
                 if 100 + i * 40 - self.scroll_pos < self.window_height:
@@ -233,7 +238,6 @@ class Button:
         self.text = text
         self.color = color
         self.last_click_time = 0
-        self.click_duration = 0.2
 
     def draw(self):
         """
@@ -241,8 +245,8 @@ class Button:
         """
         self.update()
         pygame.draw.rect(self.screen, self.color, self.rect, border_radius=30)
-        font = pygame.font.SysFont(None, 32)
-        text = font.render(self.text, True, (32, 33, 33))
+        font = pygame.font.SysFont("default", font_size_result)
+        text = font.render(self.text, True, button_color)
         text_rect = text.get_rect(center=self.rect.center)
         self.screen.blit(text, text_rect)
 
@@ -251,8 +255,8 @@ class Button:
         updates the color of the button_
         :return: button_ color
         """
-        if time.time() - self.last_click_time < self.click_duration:
-            self.color = (245, 255, 230)
+        if time.time() - self.last_click_time < click_duration:
+            self.color = button_update_color
         else:
             self.color = self.default_color
 
@@ -274,14 +278,12 @@ class Game:
     """
 
     def __init__(self):
-        self.width = 800
-        self.height = 600
-        self.screen = pygame.display.set_mode((self.width, self.height))
+        self.screen = pygame.display.set_mode((display_width, display_height))
         self.start_time = 0  # add a variable for the game start time
         background_image2_start = pygame.image.load(os.path.join("../image", "start_windon_background.jpg"))
         background_image_start = pygame.image.load(os.path.join("../image", "ARKANOID.png"))
         self.resized_image = pygame.transform.scale(background_image_start, (700, 200))
-        self.resized_image2 = pygame.transform.scale(background_image2_start, (800, 600))
+        self.resized_image2 = pygame.transform.scale(background_image2_start, (display_width, display_height))
 
     def run(self):
         """
@@ -325,19 +327,20 @@ class Game:
                         history_results_window.run()
 
             pygame.display.flip()
-            clock.tick(60)
+            clock.tick(frames_per_second)
 
 
 pygame.init()
 game = Game()
-start_button = Button(game.screen, 300, 200, 200, 50, "Start", (240, 133, 245))
-history_results_button = Button(game.screen, 295, 300, 210, 50, "History of results", (240, 133, 245))
+start_button = Button(game.screen, 300, 200, 200, button_height, "Start", start_history_menu_button)
+history_results_button = Button(game.screen, 295, 300, 210, button_height, "History of results",
+                                start_history_menu_button)
 
-difficult1_button = Button(game.screen, 160, 400, 140, 50, "Easy", (46, 224, 155))
-difficult2_button = Button(game.screen, 330, 400, 140, 50, "Medium", (46, 224, 155))
-difficult3_button = Button(game.screen, 500, 400, 140, 50, "Hard", (46, 224, 155))
+difficult1_button = Button(game.screen, 160, 400, 140, button_height, "Easy", difficult_button_color)
+difficult2_button = Button(game.screen, 330, 400, 140, button_height, "Medium", difficult_button_color)
+difficult3_button = Button(game.screen, 500, 400, 140, button_height, "Hard", difficult_button_color)
 
-back_menu_button = Button(game.screen, 10, 10, 140, 50, "Menu", (240, 133, 245))
+back_menu_button = Button(game.screen, 10, 10, 140, button_height, "Menu", start_history_menu_button)
 
 history_results_window = HistoryResultsWindow()
 
